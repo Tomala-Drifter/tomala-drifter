@@ -1,15 +1,14 @@
-import { readFile, writeFile } from 'fs/promises';
-import { join } from 'path';
+import { put, get, del } from '@vercel/blob';
 import { v4 as uuidv4 } from 'uuid';
 
-// Use temp storage in Vercel or local file
-const TASKS_FILE = process.env.VERCEL 
-  ? '/tmp/tasks.json' 
-  : join(process.cwd(), 'data/tasks.json');
+const BLOB_KEY = 'tasks.json';
 
 async function getTasks(status = null) {
   try {
-    const data = await readFile(TASKS_FILE, 'utf-8');
+    const blob = await get(BLOB_KEY);
+    if (!blob) return [];
+    
+    const data = await blob.text();
     let tasks = JSON.parse(data);
 
     if (status) {
@@ -30,26 +29,18 @@ async function getTasks(status = null) {
 
 async function saveTasks(tasks) {
   try {
-    const data = JSON.stringify(tasks, null, 2);
-    await writeFile(TASKS_FILE, data, 'utf-8');
+    await put(BLOB_KEY, JSON.stringify(tasks, null, 2), {
+      access: 'public',
+      contentType: 'application/json',
+    });
   } catch (error) {
     console.error('saveTasks error:', error);
   }
 }
 
-// Initialize file if it doesn't exist
-async function ensureTasksFile() {
-  try {
-    await readFile(TASKS_FILE, 'utf-8');
-  } catch {
-    await writeFile(TASKS_FILE, '[]', 'utf-8');
-  }
-}
-
-// List all tasks (GET /api/tasks and GET /api/tasks/[id])
+// List all tasks or get single task
 export async function GET(request) {
   try {
-    await ensureTasksFile();
     const { pathname } = new URL(request.url);
     const isDetailRoute = pathname.includes('/api/tasks/') && pathname !== '/api/tasks';
     
@@ -93,7 +84,6 @@ export async function GET(request) {
 // Create task
 export async function POST(request) {
   try {
-    await ensureTasksFile();
     const body = await request.json();
     const id = uuidv4();
     const now = new Date().toISOString();
@@ -128,10 +118,9 @@ export async function POST(request) {
   }
 }
 
-// Update or Delete task
+// Update task
 export async function PATCH(request) {
   try {
-    await ensureTasksFile();
     const { pathname } = new URL(request.url);
     const id = pathname.split('/').pop();
     const body = await request.json();
@@ -175,7 +164,6 @@ export async function PATCH(request) {
 // Delete task
 export async function DELETE(request) {
   try {
-    await ensureTasksFile();
     const { pathname } = new URL(request.url);
     const id = pathname.split('/').pop();
 
