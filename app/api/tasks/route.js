@@ -1,13 +1,17 @@
 const TUNNEL_API = 'https://todo.tomala-drifter.com';
 
 async function forwardRequest(method, path, body = null) {
-  const url = `${TUNNEL_API}/api${path}`;
+  // Add cache buster to URL
+  const separator = path.includes('?') ? '&' : '?';
+  const url = `${TUNNEL_API}/api${path}${separator}cb=${Date.now()}`;
+  
   const options = {
     method,
     headers: {
       'Content-Type': 'application/json',
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
       'Pragma': 'no-cache',
+      'Expires': '0',
     },
   };
 
@@ -21,8 +25,9 @@ async function forwardRequest(method, path, body = null) {
       status: response.status,
       headers: {
         'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
         'Pragma': 'no-cache',
+        'Expires': '0',
       },
     });
   } catch (error) {
@@ -34,7 +39,7 @@ async function forwardRequest(method, path, body = null) {
 }
 
 export async function GET(request) {
-  const path = request.nextUrl.pathname.replace('/api/tasks', '');
+  const path = request.nextUrl.pathname.replace('/api/tasks', '') + request.nextUrl.search;
   return forwardRequest('GET', '/tasks' + path);
 }
 
