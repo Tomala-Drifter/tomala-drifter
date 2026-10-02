@@ -1,31 +1,32 @@
-// Simple proxy without health check (health check cache causes issues)
 const TUNNEL_API = 'https://todo.tomala-drifter.com';
 
 async function forwardRequest(method, path, body = null) {
   const url = `${TUNNEL_API}/api${path}`;
   const options = {
     method,
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+    },
   };
 
   if (body) options.body = JSON.stringify(body);
 
   try {
     const response = await fetch(url, options);
-    if (!response.ok) {
-      const text = await response.text();
-      return new Response(JSON.stringify({ error: `HTTP ${response.status}` }), {
-        status: response.status,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
     const data = await response.json();
+    
     return new Response(JSON.stringify(data), {
       status: response.status,
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+      },
     });
   } catch (error) {
-    return new Response(JSON.stringify({ error: 'API unavailable: ' + error.message }), {
+    return new Response(JSON.stringify({ error: error.message }), {
       status: 503,
       headers: { 'Content-Type': 'application/json' },
     });
