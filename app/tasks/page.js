@@ -1,329 +1,299 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+
 export default function TasksPage() {
-  return (
-    <div style={{
-      margin: 0,
-      padding: '20px',
-      background: '#0f1115',
-      color: '#e8e9ed',
-      fontFamily: 'system-ui, sans-serif',
-      minHeight: '100vh'
-    }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <h1 style={{ marginTop: 0, fontSize: '2rem', fontWeight: 700 }}>📋 My Tasks</h1>
-        
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{ fontWeight: 600, display: 'block', marginBottom: '8px' }}>Task Title</label>
-          <input id="taskTitle" type="text" placeholder="e.g., Finish assignment" style={{
-            width: '100%',
-            padding: '10px',
-            background: '#1a1d24',
-            border: '1px solid #333',
-            color: '#e8e9ed',
-            borderRadius: '6px',
-            boxSizing: 'border-box'
-          }} />
-        </div>
+  const [tasks, setTasks] = useState([]);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [editingId, setEditingId] = useState(null);
 
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{ fontWeight: 600, display: 'block', marginBottom: '8px' }}>Description</label>
-          <textarea id="taskNotes" placeholder="Details..." rows="3" style={{
-            width: '100%',
-            padding: '10px',
-            background: '#1a1d24',
-            border: '1px solid #333',
-            color: '#e8e9ed',
-            borderRadius: '6px',
-            boxSizing: 'border-box'
-          }}></textarea>
-        </div>
-
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{ fontWeight: 600, display: 'block', marginBottom: '8px' }}>Deadline</label>
-          <input id="taskDeadline" type="datetime-local" style={{
-            width: '100%',
-            padding: '10px',
-            background: '#1a1d24',
-            border: '1px solid #333',
-            color: '#e8e9ed',
-            borderRadius: '6px',
-            boxSizing: 'border-box'
-          }} />
-        </div>
-
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{ fontWeight: 600, display: 'block', marginBottom: '8px' }}>Tag</label>
-          <select id="taskTag" style={{
-            width: '100%',
-            padding: '10px',
-            background: '#1a1d24',
-            border: '1px solid #333',
-            color: '#e8e9ed',
-            borderRadius: '6px',
-            boxSizing: 'border-box'
-          }}>
-            <option value="">— Select tag —</option>
-            <option value="studia">📚 Studia</option>
-            <option value="rcc">🏢 RCC</option>
-            <option value="prywatne">🔒 Prywatne</option>
-            <option value="lambert">📰 Lambert</option>
-            <option value="konsulting">💼 Konsulting</option>
-            <option value="weegree">💳 Weegree</option>
-            <option value="lightboys">💡 Lightboys</option>
-            <option value="arkana">✨ Arkana</option>
-            <option value="zdrowotne">🏃 Zdrowotne</option>
-            <option value="angaż">⚡ Angaż</option>
-            <option value="projekty">🛠️ Projekty</option>
-            <option value="finanse">💰 Finanse</option>
-          </select>
-        </div>
-
-        <button onClick={() => addTask()} style={{
-          padding: '10px 20px',
-          background: '#6c8cff',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '6px',
-          fontWeight: 600,
-          cursor: 'pointer'
-        }}>Add Task</button>
-
-        <hr style={{ margin: '30px 0', border: 'none', borderTop: '1px solid #333' }} />
-
-        <h2 style={{ marginTop: 0 }}>Tasks</h2>
-        <div id="tasksList" style={{ textAlign: 'center', padding: '40px', color: '#8b8f9a' }}>Loading...</div>
-
-        <hr style={{ margin: '30px 0', border: 'none', borderTop: '1px solid #333' }} />
-
-        <h2 style={{ marginTop: 0 }}>📅 Calendar</h2>
-        <div id="calendar" style={{ background: '#1a1d24', borderRadius: '8px', padding: '20px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <button id="prevMonth" style={{
-              padding: '8px 12px',
-              background: '#6c8cff',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}>← Prev</button>
-            <h3 id="monthTitle" style={{ margin: 0, fontSize: '1.2rem' }}>October 2026</h3>
-            <button id="nextMonth" style={{
-              padding: '8px 12px',
-              background: '#6c8cff',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}>Next →</button>
-          </div>
-          
-          <div id="calendarGrid" style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(7, 1fr)',
-            gap: '1px',
-            background: '#333'
-          }}></div>
-        </div>
-      </div>
-
-      <script dangerouslySetInnerHTML={{__html: `
-const API_BASE = "/api/tasks";
-let allTasks = [];
-let currentMonth = new Date();
-
-const tagColors = {
-  studia: '#6366f1',
-  rcc: '#ec4899',
-  prywatne: '#8b5cf6',
-  lambert: '#06b6d4',
-  konsulting: '#f59e0b',
-  weegree: '#10b981',
-  lightboys: '#3b82f6',
-  arkana: '#d946ef',
-  zdrowotne: '#ef4444',
-  angaż: '#f97316',
-  projekty: '#6d28d9',
-  finanse: '#059669'
-};
-
-async function loadTasks() {
-  try {
-    const response = await fetch(API_BASE);
-    allTasks = await response.json();
-    renderTasks(allTasks);
-    renderCalendar();
-  } catch (error) {
-    document.getElementById("tasksList").innerHTML = '<p>Error loading tasks</p>';
-  }
-}
-
-function renderTasks(tasks) {
-  const list = document.getElementById("tasksList");
-  if (!tasks.length) {
-    list.innerHTML = '<p style="color: #8b8f9a; text-align: center; padding: 40px;">No tasks yet</p>';
-    return;
-  }
-  
-  list.innerHTML = tasks.map(task => {
-    const tags = JSON.parse(task.tags || '[]');
-    const deadline = task.deadline ? new Date(task.deadline).toLocaleDateString('pl-PL', { year: 'numeric', month: 'short', day: 'numeric' }) : 'No deadline';
-    return \`
-      <div style="background: #1a1d24; borderLeft: '4px solid #6c8cff'; padding: 15px; borderRadius: 6px; display: flex; justifyContent: space-between; alignItems: center; marginBottom: 12px; opacity: \${task.status === 'done' ? '0.6' : '1'};">
-        <div style="flex: 1;">
-          <div style="fontWeight: 600; marginBottom: 5px;">\${task.title}</div>
-          <div style="fontSize: 0.85rem; color: #8b8f9a;">\${deadline}</div>
-          \${tags.length ? \`<div style="display: flex; gap: 6px; flexWrap: wrap; marginTop: 8px;">\${tags.map(t => \`<span style="display: inline-block; padding: '3px 8px'; background: 'rgba(108, 140, 255, 0.2)'; color: '#6c8cff'; borderRadius: 3px; fontSize: '0.75rem'; fontWeight: 600;">\${t}</span>\`).join('')}</div>\` : ''}
-        </div>
-        <div style="display: flex; gap: 10px; marginLeft: 15px;">
-          <button onClick="toggleTask('\${task.id}', '\${task.status === 'done' ? 'todo' : 'done'}')" style="padding: '6px 12px'; background: '#6c8cff'; color: '#fff'; border: none; borderRadius: 6px; cursor: pointer; fontSize: '0.85rem';">
-            \${task.status === 'done' ? '↩️ Undo' : '✓ Done'}
-          </button>
-          <button onClick="deleteTask('\${task.id}')" style="padding: '6px 12px'; background: '#ff5c5c'; color: '#fff'; border: none; borderRadius: 6px; cursor: pointer; fontSize: '0.85rem';">🗑️</button>
-        </div>
-      </div>
-    \`;
-  }).join('');
-}
-
-function renderCalendar() {
-  const year = currentMonth.getFullYear();
-  const month = currentMonth.getMonth();
-  
-  // Update title
-  document.getElementById('monthTitle').textContent = currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-  
-  // Get first day of month and number of days
-  const firstDay = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  
-  // Create calendar grid
-  const grid = document.getElementById('calendarGrid');
-  grid.innerHTML = '';
-  
-  // Day headers
-  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  dayNames.forEach(day => {
-    const header = document.createElement('div');
-    header.style.cssText = 'padding: 8px; textAlign: center; fontWeight: 600; fontSize: 0.9rem; background: #0f1115; color: #8b8f9a;';
-    header.textContent = day;
-    grid.appendChild(header);
-  });
-  
-  // Empty cells before first day
-  for (let i = 0; i < firstDay; i++) {
-    const empty = document.createElement('div');
-    empty.style.cssText = 'padding: 10px; background: #0f1115; minHeight: 100px;';
-    grid.appendChild(empty);
-  }
-  
-  // Days of month
-  for (let day = 1; day <= daysInMonth; day++) {
-    const date = new Date(year, month, day);
-    const dateStr = date.toISOString().split('T')[0];
-    
-    // Find tasks for this day
-    const tasksForDay = allTasks.filter(task => {
-      if (!task.deadline) return false;
-      const taskDate = task.deadline.split('T')[0];
-      return taskDate === dateStr && task.status !== 'done';
-    });
-    
-    const cell = document.createElement('div');
-    cell.style.cssText = 'padding: 10px; background: #1a1d24; minHeight: 100px; borderRadius: 4px; fontSize: 0.85rem; overflow-y: auto;';
-    
-    // Day number
-    const dayNum = document.createElement('div');
-    dayNum.style.cssText = 'fontWeight: 600; marginBottom: 8px; paddingBottom: 8px; borderBottom: 1px solid #333; color: #6c8cff;';
-    dayNum.textContent = day;
-    cell.appendChild(dayNum);
-    
-    // Tasks
-    tasksForDay.forEach(task => {
-      const tags = JSON.parse(task.tags || '[]');
-      const taskEl = document.createElement('div');
-      taskEl.style.cssText = 'marginBottom: 6px; padding: 4px 6px; background: rgba(108, 140, 255, 0.1); borderRadius: 3px; fontSize: 0.75rem; cursor: pointer; wordBreak: break-word; border-left: 3px solid ' + (tagColors[tags[0]] || '#6c8cff');
-      taskEl.textContent = '• ' + task.title.substring(0, 20) + (task.title.length > 20 ? '...' : '');
-      taskEl.title = task.title;
-      taskEl.onclick = () => toggleTask(task.id, 'done');
-      cell.appendChild(taskEl);
-    });
-    
-    grid.appendChild(cell);
-  }
-}
-
-document.getElementById('prevMonth').addEventListener('click', () => {
-  currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1);
-  renderCalendar();
-});
-
-document.getElementById('nextMonth').addEventListener('click', () => {
-  currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1);
-  renderCalendar();
-});
-
-async function addTask() {
-  const title = document.getElementById('taskTitle').value;
-  const notes = document.getElementById('taskNotes').value;
-  const deadline = document.getElementById('taskDeadline').value;
-  const tag = document.getElementById('taskTag').value;
-  
-  if (!title) {
-    alert('Please enter a task title');
-    return;
-  }
-  
-  const payload = {
-    title,
-    notes,
-    deadline: deadline ? new Date(deadline).toISOString() : null,
-    status: 'todo',
-    tags: tag ? [tag] : []
+  const tagColors = {
+    studia: '#6366f1',
+    rcc: '#ec4899',
+    prywatne: '#8b5cf6',
+    lambert: '#06b6d4',
+    konsulting: '#f59e0b',
+    weegree: '#10b981',
+    lightboys: '#3b82f6',
+    arkana: '#d946ef',
+    zdrowotne: '#ef4444',
+    angaż: '#f97316',
+    projekty: '#6d28d9',
+    finanse: '#059669'
   };
-  
-  try {
-    await fetch(API_BASE, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+
+  const tagEmojis = {
+    studia: '📚',
+    rcc: '🏢',
+    prywatne: '🔒',
+    lambert: '📰',
+    konsulting: '💼',
+    weegree: '💳',
+    lightboys: '💡',
+    arkana: '✨',
+    zdrowotne: '🏃',
+    angaż: '⚡',
+    projekty: '🛠️',
+    finanse: '💰'
+  };
+
+  useEffect(() => {
+    loadTasks();
+  }, []);
+
+  const loadTasks = async () => {
+    try {
+      const res = await fetch('/api/tasks');
+      const data = await res.json();
+      setTasks(data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const addTask = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const deadline = formData.get('deadline') ? new Date(formData.get('deadline')).toISOString() : null;
+    const tag = formData.get('tag');
+
+    try {
+      await fetch('/api/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: formData.get('title'),
+          notes: formData.get('notes'),
+          deadline,
+          status: 'todo',
+          tags: tag ? [tag] : []
+        })
+      });
+      e.target.reset();
+      loadTasks();
+    } catch (e) {
+      alert('Error adding task');
+    }
+  };
+
+  const saveEdit = async (taskId, data) => {
+    try {
+      await fetch(`/api/tasks/${taskId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      setEditingId(null);
+      loadTasks();
+    } catch (e) {
+      alert('Error saving task');
+    }
+  };
+
+  const toggleTask = async (id, status) => {
+    await saveEdit(id, { status: status === 'done' ? 'todo' : 'done' });
+  };
+
+  const deleteTask = async (id) => {
+    if (!confirm('Delete?')) return;
+    try {
+      await fetch(`/api/tasks/${id}`, { method: 'DELETE' });
+      loadTasks();
+    } catch (e) {
+      alert('Error deleting task');
+    }
+  };
+
+  const renderCalendar = () => {
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    const days = [];
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    dayNames.forEach(d => {
+      days.push(
+        <div key={`header-${d}`} style={{ padding: '8px', textAlign: 'center', fontWeight: 600, fontSize: '0.8rem', background: '#0f1115', color: '#8b8f9a' }}>
+          {d}
+        </div>
+      );
     });
-    
-    document.getElementById('taskTitle').value = '';
-    document.getElementById('taskNotes').value = '';
-    document.getElementById('taskDeadline').value = '';
-    document.getElementById('taskTag').value = '';
-    
-    loadTasks();
-  } catch (error) {
-    alert('Error adding task');
-  }
+
+    for (let i = 0; i < firstDay; i++) {
+      days.push(<div key={`empty-${i}`} style={{ padding: '8px', background: '#0f1115', minHeight: '80px' }}></div>);
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dateStr = new Date(year, month, day).toISOString().split('T')[0];
+      const tasksForDay = tasks.filter(t => t.deadline && t.deadline.split('T')[0] === dateStr && t.status !== 'done');
+
+      days.push(
+        <div key={`day-${day}`} style={{ padding: '8px', background: '#1a1d24', minHeight: '80px', borderRadius: '4px', overflow: 'auto' }}>
+          <div style={{ fontWeight: 600, marginBottom: '4px', paddingBottom: '4px', borderBottom: '1px solid #333', color: '#6c8cff', fontSize: '0.85rem' }}>
+            {day}
+          </div>
+          {tasksForDay.map(task => {
+            const tags = JSON.parse(task.tags || '[]');
+            const color = tags.length ? tagColors[tags[0]] : '#6c8cff';
+            return (
+              <div key={task.id} onClick={() => toggleTask(task.id, task.status)} style={{ marginBottom: '3px', padding: '3px 5px', background: color, borderRadius: '3px', fontSize: '0.7rem', cursor: 'pointer', color: '#fff', wordBreak: 'break-word' }} title={task.title}>
+                {task.title.substring(0, 15)}{task.title.length > 15 ? '...' : ''}
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+
+    return days;
+  };
+
+  return (
+    <div style={{ margin: 0, padding: '20px', background: '#0f1115', color: '#e8e9ed', fontFamily: 'system-ui, sans-serif', minHeight: '100vh' }}>
+      <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+        <h1 style={{ marginTop: 0, fontSize: '2rem', fontWeight: 700 }}>📋 My Tasks</h1>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px', marginBottom: '30px' }}>
+          {/* Form */}
+          <div>
+            <h2 style={{ marginTop: 0, fontSize: '1.2rem' }}>Add Task</h2>
+            <form onSubmit={addTask} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+              <div>
+                <label style={{ fontWeight: 600, display: 'block', marginBottom: '6px', fontSize: '0.9rem' }}>Title</label>
+                <input name="title" type="text" placeholder="Task name" required style={{ width: '100%', padding: '10px', background: '#1a1d24', border: '1px solid #333', color: '#e8e9ed', borderRadius: '6px', boxSizing: 'border-box' }} />
+              </div>
+              <div>
+                <label style={{ fontWeight: 600, display: 'block', marginBottom: '6px', fontSize: '0.9rem' }}>Notes</label>
+                <textarea name="notes" placeholder="Details..." rows="3" style={{ width: '100%', padding: '10px', background: '#1a1d24', border: '1px solid #333', color: '#e8e9ed', borderRadius: '6px', boxSizing: 'border-box' }}></textarea>
+              </div>
+              <div>
+                <label style={{ fontWeight: 600, display: 'block', marginBottom: '6px', fontSize: '0.9rem' }}>Deadline</label>
+                <input name="deadline" type="datetime-local" style={{ width: '100%', padding: '10px', background: '#1a1d24', border: '1px solid #333', color: '#e8e9ed', borderRadius: '6px', boxSizing: 'border-box' }} />
+              </div>
+              <div>
+                <label style={{ fontWeight: 600, display: 'block', marginBottom: '6px', fontSize: '0.9rem' }}>Tag</label>
+                <select name="tag" style={{ width: '100%', padding: '10px', background: '#1a1d24', border: '1px solid #333', color: '#e8e9ed', borderRadius: '6px', boxSizing: 'border-box' }}>
+                  <option value="">— Select tag —</option>
+                  <option value="studia">📚 Studia</option>
+                  <option value="rcc">🏢 RCC</option>
+                  <option value="prywatne">🔒 Prywatne</option>
+                  <option value="lambert">📰 Lambert</option>
+                  <option value="konsulting">💼 Konsulting</option>
+                  <option value="weegree">💳 Weegree</option>
+                  <option value="lightboys">💡 Lightboys</option>
+                  <option value="arkana">✨ Arkana</option>
+                  <option value="zdrowotne">🏃 Zdrowotne</option>
+                  <option value="angaż">⚡ Angaż</option>
+                  <option value="projekty">🛠️ Projekty</option>
+                  <option value="finanse">💰 Finanse</option>
+                </select>
+              </div>
+              <button type="submit" style={{ padding: '12px', background: '#6c8cff', color: '#fff', border: 'none', borderRadius: '6px', fontWeight: 600, cursor: 'pointer' }}>+ Add Task</button>
+            </form>
+          </div>
+
+          {/* Calendar */}
+          <div>
+            <h2 style={{ marginTop: 0, fontSize: '1.2rem' }}>📅 Calendar</h2>
+            <div style={{ background: '#1a1d24', borderRadius: '8px', padding: '15px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                <button onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1))} style={{ padding: '6px 10px', background: '#6c8cff', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem' }}>← Prev</button>
+                <h3 style={{ margin: 0, fontSize: '1rem' }}>{currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</h3>
+                <button onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1))} style={{ padding: '6px 10px', background: '#6c8cff', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem' }}>Next →</button>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '2px', background: '#0f1115' }}>
+                {renderCalendar()}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr style={{ margin: '30px 0', border: 'none', borderTop: '1px solid #333' }} />
+
+        <h2 style={{ marginTop: 0, fontSize: '1.2rem' }}>📋 All Tasks</h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {tasks.length === 0 ? (
+            <p style={{ color: '#8b8f9a', textAlign: 'center', padding: '40px' }}>No tasks yet</p>
+          ) : (
+            tasks.map(task => {
+              const tags = JSON.parse(task.tags || '[]');
+              const tagColor = tags.length ? tagColors[tags[0]] : '#6c8cff';
+              const deadline = task.deadline ? new Date(task.deadline).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'No deadline';
+
+              if (editingId === task.id) {
+                return (
+                  <EditForm key={task.id} task={task} tagColors={tagColors} tagEmojis={tagEmojis} onSave={(data) => saveEdit(task.id, data)} onCancel={() => setEditingId(null)} />
+                );
+              }
+
+              return (
+                <div key={task.id} style={{ background: '#1a1d24', borderLeft: `4px solid ${tagColor}`, padding: '15px', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', opacity: task.status === 'done' ? 0.6 : 1 }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 600, marginBottom: '5px' }}>{task.title}</div>
+                    <div style={{ fontSize: '0.85rem', color: '#8b8f9a' }}>{deadline}</div>
+                    {tags.length > 0 && (
+                      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '8px' }}>
+                        {tags.map(t => (
+                          <span key={t} style={{ display: 'inline-block', padding: '4px 10px', background: tagColors[t], color: '#fff', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 600 }}>
+                            {tagEmojis[t]} {t}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px', marginLeft: '15px' }}>
+                    <button onClick={() => setEditingId(task.id)} style={{ padding: '6px 12px', background: '#6366f1', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem' }}>✏️ Edit</button>
+                    <button onClick={() => toggleTask(task.id, task.status)} style={{ padding: '6px 12px', background: '#10b981', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem' }}>
+                      {task.status === 'done' ? '↩️ Undo' : '✓ Done'}
+                    </button>
+                    <button onClick={() => deleteTask(task.id)} style={{ padding: '6px 12px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem' }}>🗑️</button>
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
 
-async function toggleTask(id, newStatus) {
-  try {
-    await fetch(\`\${API_BASE}/\${id}\`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status: newStatus })
-    });
-    loadTasks();
-  } catch (error) {
-    alert('Error updating task');
-  }
-}
+function EditForm({ task, tagColors, tagEmojis, onSave, onCancel }) {
+  const [data, setData] = useState({
+    title: task.title,
+    notes: task.notes,
+    deadline: task.deadline ? task.deadline.replace('Z', '') : '',
+    tags: JSON.parse(task.tags || '[]')
+  });
 
-async function deleteTask(id) {
-  if (!confirm('Delete this task?')) return;
-  
-  try {
-    await fetch(\`\${API_BASE}/\${id}\`, { method: 'DELETE' });
-    loadTasks();
-  } catch (error) {
-    alert('Error deleting task');
-  }
-}
-
-loadTasks();
-      `}} />
+  return (
+    <div style={{ background: '#1a1d24', padding: '15px', borderRadius: '6px', borderLeft: '4px solid #6c8cff' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+        <input type="text" value={data.title} onChange={(e) => setData({ ...data, title: e.target.value })} style={{ padding: '10px', background: '#0f1115', border: '1px solid #333', color: '#e8e9ed', borderRadius: '4px' }} />
+        <select value={data.tags[0] || ''} onChange={(e) => setData({ ...data, tags: e.target.value ? [e.target.value] : [] })} style={{ padding: '10px', background: '#0f1115', border: '1px solid #333', color: '#e8e9ed', borderRadius: '4px' }}>
+          <option value="">— Select tag —</option>
+          <option value="studia">📚 Studia</option>
+          <option value="rcc">🏢 RCC</option>
+          <option value="prywatne">🔒 Prywatne</option>
+          <option value="lambert">📰 Lambert</option>
+          <option value="konsulting">💼 Konsulting</option>
+          <option value="weegree">💳 Weegree</option>
+          <option value="lightboys">💡 Lightboys</option>
+          <option value="arkana">✨ Arkana</option>
+          <option value="zdrowotne">🏃 Zdrowotne</option>
+          <option value="angaż">⚡ Angaż</option>
+          <option value="projekty">🛠️ Projekty</option>
+          <option value="finanse">💰 Finanse</option>
+        </select>
+      </div>
+      <textarea value={data.notes} onChange={(e) => setData({ ...data, notes: e.target.value })} rows="2" style={{ width: '100%', padding: '10px', background: '#0f1115', border: '1px solid #333', color: '#e8e9ed', borderRadius: '4px', marginTop: '10px', boxSizing: 'border-box' }} />
+      <input type="datetime-local" value={data.deadline} onChange={(e) => setData({ ...data, deadline: e.target.value })} style={{ width: '100%', padding: '10px', background: '#0f1115', border: '1px solid #333', color: '#e8e9ed', borderRadius: '4px', marginTop: '10px', boxSizing: 'border-box' }} />
+      <div style={{ display: 'flex', gap: '10px', marginTop: '10px', justifyContent: 'flex-end' }}>
+        <button onClick={onCancel} style={{ padding: '8px 16px', background: '#333', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
+        <button onClick={() => onSave({ title: data.title, notes: data.notes, deadline: data.deadline ? new Date(data.deadline).toISOString() : null, tags: data.tags })} style={{ padding: '8px 16px', background: '#6c8cff', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Save</button>
+      </div>
     </div>
   );
 }
