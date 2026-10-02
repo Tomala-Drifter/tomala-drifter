@@ -104,7 +104,10 @@ export default function TasksPage() {
   const deleteTask = async (id) => {
     if (!confirm('Delete?')) return;
     try {
-      const res = await fetch(`/api/tasks/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/tasks/${id}`, { 
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' }
+      });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       await loadTasks();
     } catch (e) {
