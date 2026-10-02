@@ -6,6 +6,7 @@ export default function TasksPage() {
   const [tasks, setTasks] = useState([]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [editingId, setEditingId] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const tagColors = {
     studia: '#6366f1',
@@ -43,11 +44,15 @@ export default function TasksPage() {
 
   const loadTasks = async () => {
     try {
+      setLoading(true);
       const res = await fetch('/api/tasks');
       const data = await res.json();
-      setTasks(data);
+      setTasks(Array.isArray(data) ? data : []);
     } catch (e) {
-      console.error(e);
+      console.error('Load error:', e);
+      setTasks([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -72,7 +77,7 @@ export default function TasksPage() {
       e.target.reset();
       loadTasks();
     } catch (e) {
-      alert('Error adding task');
+      alert('Error adding task: ' + e.message);
     }
   };
 
@@ -86,7 +91,7 @@ export default function TasksPage() {
       setEditingId(null);
       loadTasks();
     } catch (e) {
-      alert('Error saving task');
+      alert('Error saving: ' + e.message);
     }
   };
 
@@ -100,11 +105,12 @@ export default function TasksPage() {
       await fetch(`/api/tasks/${id}`, { method: 'DELETE' });
       loadTasks();
     } catch (e) {
-      alert('Error deleting task');
+      alert('Error: ' + e.message);
     }
   };
 
-  const renderCalendar = () => {
+  // Render calendar days
+  const renderCalendarDays = () => {
     const year = currentMonth.getFullYear();
     const month = currentMonth.getMonth();
     const firstDay = new Date(year, month, 1).getDay();
@@ -113,6 +119,7 @@ export default function TasksPage() {
     const days = [];
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
+    // Headers
     dayNames.forEach(d => {
       days.push(
         <div key={`header-${d}`} style={{ padding: '8px', textAlign: 'center', fontWeight: 600, fontSize: '0.8rem', background: '#0f1115', color: '#8b8f9a' }}>
@@ -121,27 +128,39 @@ export default function TasksPage() {
       );
     });
 
+    // Empty cells
     for (let i = 0; i < firstDay; i++) {
       days.push(<div key={`empty-${i}`} style={{ padding: '8px', background: '#0f1115', minHeight: '80px' }}></div>);
     }
 
+    // Days with tasks
     for (let day = 1; day <= daysInMonth; day++) {
       const dateStr = new Date(year, month, day).toISOString().split('T')[0];
-      const tasksForDay = tasks.filter(t => t.deadline && t.deadline.split('T')[0] === dateStr && t.status !== 'done');
+      const dayTasks = tasks.filter(t => {
+        try {
+          return t.deadline && t.deadline.split('T')[0] === dateStr && t.status !== 'done';
+        } catch {
+          return false;
+        }
+      });
 
       days.push(
         <div key={`day-${day}`} style={{ padding: '8px', background: '#1a1d24', minHeight: '80px', borderRadius: '4px', overflow: 'auto' }}>
           <div style={{ fontWeight: 600, marginBottom: '4px', paddingBottom: '4px', borderBottom: '1px solid #333', color: '#6c8cff', fontSize: '0.85rem' }}>
             {day}
           </div>
-          {tasksForDay.map(task => {
-            const tags = JSON.parse(task.tags || '[]');
-            const color = tags.length ? tagColors[tags[0]] : '#6c8cff';
-            return (
-              <div key={task.id} onClick={() => toggleTask(task.id, task.status)} style={{ marginBottom: '3px', padding: '3px 5px', background: color, borderRadius: '3px', fontSize: '0.7rem', cursor: 'pointer', color: '#fff', wordBreak: 'break-word' }} title={task.title}>
-                {task.title.substring(0, 15)}{task.title.length > 15 ? '...' : ''}
-              </div>
-            );
+          {dayTasks.map(task => {
+            try {
+              const tags = JSON.parse(task.tags || '[]');
+              const color = tags.length ? tagColors[tags[0]] : '#6c8cff';
+              return (
+                <div key={task.id} onClick={() => toggleTask(task.id, task.status)} style={{ marginBottom: '3px', padding: '3px 5px', background: color, borderRadius: '3px', fontSize: '0.7rem', cursor: 'pointer', color: '#fff', wordBreak: 'break-word' }} title={task.title}>
+                  {task.title.substring(0, 15)}{task.title.length > 15 ? '...' : ''}
+                </div>
+              );
+            } catch {
+              return null;
+            }
           })}
         </div>
       );
@@ -149,6 +168,10 @@ export default function TasksPage() {
 
     return days;
   };
+
+  if (loading) {
+    return <div style={{ padding: '40px', textAlign: 'center', color: '#8b8f9a' }}>Loading...</div>;
+  }
 
   return (
     <div style={{ margin: 0, padding: '20px', background: '#0f1115', color: '#e8e9ed', fontFamily: 'system-ui, sans-serif', minHeight: '100vh' }}>
@@ -204,7 +227,7 @@ export default function TasksPage() {
                 <button onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1))} style={{ padding: '6px 10px', background: '#6c8cff', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem' }}>Next →</button>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '2px', background: '#0f1115' }}>
-                {renderCalendar()}
+                {renderCalendarDays()}
               </div>
             </div>
           </div>
@@ -218,40 +241,45 @@ export default function TasksPage() {
             <p style={{ color: '#8b8f9a', textAlign: 'center', padding: '40px' }}>No tasks yet</p>
           ) : (
             tasks.map(task => {
-              const tags = JSON.parse(task.tags || '[]');
-              const tagColor = tags.length ? tagColors[tags[0]] : '#6c8cff';
-              const deadline = task.deadline ? new Date(task.deadline).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'No deadline';
+              try {
+                const tags = JSON.parse(task.tags || '[]');
+                const tagColor = tags.length ? tagColors[tags[0]] : '#6c8cff';
+                const deadline = task.deadline ? new Date(task.deadline).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'No deadline';
 
-              if (editingId === task.id) {
+                if (editingId === task.id) {
+                  return (
+                    <EditForm key={task.id} task={task} tagColors={tagColors} tagEmojis={tagEmojis} onSave={(data) => saveEdit(task.id, data)} onCancel={() => setEditingId(null)} />
+                  );
+                }
+
                 return (
-                  <EditForm key={task.id} task={task} tagColors={tagColors} tagEmojis={tagEmojis} onSave={(data) => saveEdit(task.id, data)} onCancel={() => setEditingId(null)} />
+                  <div key={task.id} style={{ background: '#1a1d24', borderLeft: `4px solid ${tagColor}`, padding: '15px', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', opacity: task.status === 'done' ? 0.6 : 1 }}>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 600, marginBottom: '5px' }}>{task.title}</div>
+                      <div style={{ fontSize: '0.85rem', color: '#8b8f9a' }}>{deadline}</div>
+                      {tags.length > 0 && (
+                        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '8px' }}>
+                          {tags.map(t => (
+                            <span key={t} style={{ display: 'inline-block', padding: '4px 10px', background: tagColors[t] || '#6c8cff', color: '#fff', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 600 }}>
+                              {tagEmojis[t]} {t}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', marginLeft: '15px' }}>
+                      <button onClick={() => setEditingId(task.id)} style={{ padding: '6px 12px', background: '#6366f1', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem' }}>✏️ Edit</button>
+                      <button onClick={() => toggleTask(task.id, task.status)} style={{ padding: '6px 12px', background: '#10b981', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem' }}>
+                        {task.status === 'done' ? '↩️ Undo' : '✓ Done'}
+                      </button>
+                      <button onClick={() => deleteTask(task.id)} style={{ padding: '6px 12px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem' }}>🗑️</button>
+                    </div>
+                  </div>
                 );
+              } catch (err) {
+                console.error('Task render error:', err);
+                return null;
               }
-
-              return (
-                <div key={task.id} style={{ background: '#1a1d24', borderLeft: `4px solid ${tagColor}`, padding: '15px', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', opacity: task.status === 'done' ? 0.6 : 1 }}>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 600, marginBottom: '5px' }}>{task.title}</div>
-                    <div style={{ fontSize: '0.85rem', color: '#8b8f9a' }}>{deadline}</div>
-                    {tags.length > 0 && (
-                      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '8px' }}>
-                        {tags.map(t => (
-                          <span key={t} style={{ display: 'inline-block', padding: '4px 10px', background: tagColors[t], color: '#fff', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 600 }}>
-                            {tagEmojis[t]} {t}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  <div style={{ display: 'flex', gap: '8px', marginLeft: '15px' }}>
-                    <button onClick={() => setEditingId(task.id)} style={{ padding: '6px 12px', background: '#6366f1', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem' }}>✏️ Edit</button>
-                    <button onClick={() => toggleTask(task.id, task.status)} style={{ padding: '6px 12px', background: '#10b981', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem' }}>
-                      {task.status === 'done' ? '↩️ Undo' : '✓ Done'}
-                    </button>
-                    <button onClick={() => deleteTask(task.id)} style={{ padding: '6px 12px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem' }}>🗑️</button>
-                  </div>
-                </div>
-              );
             })
           )}
         </div>
@@ -262,10 +290,16 @@ export default function TasksPage() {
 
 function EditForm({ task, tagColors, tagEmojis, onSave, onCancel }) {
   const [data, setData] = useState({
-    title: task.title,
-    notes: task.notes,
+    title: task.title || '',
+    notes: task.notes || '',
     deadline: task.deadline ? task.deadline.replace('Z', '') : '',
-    tags: JSON.parse(task.tags || '[]')
+    tags: (() => {
+      try {
+        return JSON.parse(task.tags || '[]');
+      } catch {
+        return [];
+      }
+    })()
   });
 
   return (
