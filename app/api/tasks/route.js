@@ -1,89 +1,90 @@
-import { kv } from '@vercel/kv';
-import { v4 as uuidv4 } from 'uuid';
+const TODO_API = 'https://todo.tomala-drifter.com';
 
-// Helper functions
-async function getTasks(status = null) {
+async function forwardRequest(method, path, body = null) {
+  const url = `${TODO_API}/api${path}`;
+  const options = {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+  };
+  
+  if (body) {
+    options.body = JSON.stringify(body);
+  }
+  
   try {
-    const tasksJson = await kv.get('tasks_list') || '[]';
-    let tasks = typeof tasksJson === 'string' ? JSON.parse(tasksJson) : tasksJson;
+    const response = await fetch(url, options);
+    const data = await response.json();
+    return new Response(JSON.stringify(data), {
+      status: response.status,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    return new Response(JSON.stringify({ error: 'API unavailable' }), {
+      status: 503,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+}
 
-    if (status) {
-      tasks = tasks.filter(t => t.status === status);
+export async function GET(request, { params }) {
+  const path = request.nextUrl.pathname.replace('/api/tasks', '');
+  return forwardRequest('GET', '/tasks' + path);
+}
+
+export async function POST(request, { params }) {
+  const body = await request.json();
+  return forwardRequest('POST', '/tasks', body);
+}
+
+export async function PATCH(request, { params }) {
+  const path = request.nextUrl.pathname.replace('/api/tasks', '');
+  const body = await request.json();
+  try {
+    const response = await fetch(`${TODO_API}/api/tasks${path}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    if (!response.ok) {
+      return new Response(JSON.stringify({ error: `HTTP ${response.status}` }), {
+        status: response.status,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
-
-    return tasks.sort((a, b) => {
-      if (!a.deadline && !b.deadline) return 0;
-      if (!a.deadline) return 1;
-      if (!b.deadline) return -1;
-      return new Date(a.deadline) - new Date(b.deadline);
-    });
-  } catch (error) {
-    console.error('getTasks error:', error);
-    return [];
-  }
-}
-
-async function saveTasks(tasks) {
-  try {
-    await kv.set('tasks_list', JSON.stringify(tasks));
-  } catch (error) {
-    console.error('saveTasks error:', error);
-  }
-}
-
-// List all tasks
-export async function GET(request) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const status = searchParams.get('status');
-
-    const tasks = await getTasks(status);
-
-    return new Response(JSON.stringify(tasks), {
-      status: 200,
+    const data = await response.json();
+    return new Response(JSON.stringify(data), {
+      status: response.status,
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error('GET error:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
+    return new Response(JSON.stringify({ error: 'API unavailable: ' + error.message }), {
+      status: 503,
       headers: { 'Content-Type': 'application/json' },
     });
   }
 }
 
-// Create task
-export async function POST(request) {
+export async function DELETE(request, { params }) {
+  const path = request.nextUrl.pathname.replace('/api/tasks', '');
   try {
-    const body = await request.json();
-    const id = uuidv4();
-    const now = new Date().toISOString();
-
-    const task = {
-      id,
-      title: body.title,
-      notes: body.notes || '',
-      deadline: body.deadline || null,
-      status: body.status || 'todo',
-      tags: body.tags || [],
-      reminded_7d: 0,
-      reminded_6h: 0,
-      created_at: now,
-      updated_at: now,
-    };
-
-    const tasks = await getTasks();
-    tasks.push(task);
-    await saveTasks(tasks);
-
-    return new Response(JSON.stringify(task), {
-      status: 201,
+    const response = await fetch(`${TODO_API}/api/tasks${path}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (!response.ok) {
+      return new Response(JSON.stringify({ error: `HTTP ${response.status}` }), {
+        status: response.status,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    const data = await response.json();
+    return new Response(JSON.stringify(data), {
+      status: response.status,
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error('POST error:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
+    return new Response(JSON.stringify({ error: 'API unavailable: ' + error.message }), {
+      status: 503,
       headers: { 'Content-Type': 'application/json' },
     });
   }
