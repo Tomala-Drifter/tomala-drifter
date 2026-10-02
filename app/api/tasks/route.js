@@ -1,7 +1,7 @@
 import { kv } from '@vercel/kv';
 import { v4 as uuidv4 } from 'uuid';
 
-// Helper functions using Vercel KV
+// Helper functions
 async function getTasks(status = null) {
   try {
     const tasksJson = await kv.get('tasks_list') || '[]';
@@ -31,7 +31,7 @@ async function saveTasks(tasks) {
   }
 }
 
-// API Handlers
+// List all tasks
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -52,6 +52,7 @@ export async function GET(request) {
   }
 }
 
+// Create task
 export async function POST(request) {
   try {
     const body = await request.json();
@@ -81,80 +82,6 @@ export async function POST(request) {
     });
   } catch (error) {
     console.error('POST error:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
-}
-
-export async function PATCH(request) {
-  try {
-    const { pathname } = new URL(request.url);
-    const id = pathname.split('/').pop();
-    const body = await request.json();
-    const now = new Date().toISOString();
-
-    const tasks = await getTasks();
-    const taskIndex = tasks.findIndex(t => t.id === id);
-
-    if (taskIndex === -1) {
-      return new Response(JSON.stringify({ error: 'Task not found' }), {
-        status: 404,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-
-    const task = tasks[taskIndex];
-    
-    // Update fields
-    if (body.title !== undefined) task.title = body.title;
-    if (body.notes !== undefined) task.notes = body.notes;
-    if (body.deadline !== undefined) task.deadline = body.deadline;
-    if (body.status !== undefined) task.status = body.status;
-    if (body.tags !== undefined) task.tags = body.tags;
-    task.updated_at = now;
-
-    tasks[taskIndex] = task;
-    await saveTasks(tasks);
-
-    return new Response(JSON.stringify(task), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  } catch (error) {
-    console.error('PATCH error:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
-}
-
-export async function DELETE(request) {
-  try {
-    const { pathname } = new URL(request.url);
-    const id = pathname.split('/').pop();
-
-    const tasks = await getTasks();
-    const task = tasks.find(t => t.id === id);
-
-    if (!task) {
-      return new Response(JSON.stringify({ error: 'Task not found' }), {
-        status: 404,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-
-    const filtered = tasks.filter(t => t.id !== id);
-    await saveTasks(filtered);
-
-    return new Response(JSON.stringify({ status: 'deleted', id }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  } catch (error) {
-    console.error('DELETE error:', error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
