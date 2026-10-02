@@ -34,7 +34,7 @@ export default function Home() {
             <a href="#contact" className="px-8 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition">
               Get in Touch
             </a>
-            <a href="/to-do-list" className="px-8 py-3 border border-gray-600 hover:border-gray-400 rounded-lg font-medium transition">
+            <a href="/tasks" className="px-8 py-3 border border-gray-600 hover:border-gray-400 rounded-lg font-medium transition">
               My Tasks
             </a>
           </div>
