@@ -1,1 +1,198 @@
-[]
+[
+  {
+    "id": "d96d1247-20c6-43eb-81f5-bfa118cd5346",
+    "title": "Applied Statistics 2 \u2014 Assignment 7",
+    "notes": "Deadline: 15 Oct 2026 at 23:59 (1 pt)",
+    "deadline": "2026-10-15T23:59:00Z",
+    "status": "todo",
+    "tags": [
+      "studia"
+    ],
+    "reminded_7d": 0,
+    "reminded_6h": 0,
+    "created_at": "2026-10-02T13:09:59.991009+00:00",
+    "updated_at": "2026-10-02T13:09:59.991009+00:00"
+  },
+  {
+    "id": "fa7d41fb-34fc-46e7-8e46-48642a0393bc",
+    "title": "Applied Statistics 2 \u2014 Assignment 6",
+    "notes": "Deadline: 8 Oct 2026 at 23:59 (1 pt)",
+    "deadline": "2026-10-08T23:59:00Z",
+    "status": "todo",
+    "tags": [
+      "studia"
+    ],
+    "reminded_7d": 1,
+    "reminded_6h": 0,
+    "created_at": "2026-10-02T13:10:04.808010+00:00",
+    "updated_at": "2026-10-02T13:10:04.808010+00:00"
+  },
+  {
+    "id": "84014624-b93e-469f-b28b-7b0199768652",
+    "title": "Applied Statistics 2 \u2014 JASP Assignment 3",
+    "notes": "Deadline: 12 Oct 2026 at 23:59 (1 pt)",
+    "deadline": "2026-10-12T23:59:00Z",
+    "status": "todo",
+    "tags": [
+      "studia"
+    ],
+    "reminded_7d": 0,
+    "reminded_6h": 0,
+    "created_at": "2026-10-02T13:10:04.881157+00:00",
+    "updated_at": "2026-10-02T13:10:04.881157+00:00"
+  },
+  {
+    "id": "5296a67a-c688-4d52-bd2d-f6217ab42c7a",
+    "title": "Applied Statistics 2 \u2014 Assignment 7",
+    "notes": "Deadline: 15 Oct 2026 at 23:59 (1 pt)",
+    "deadline": "2026-10-15T23:59:00Z",
+    "status": "todo",
+    "tags": [
+      "studia"
+    ],
+    "reminded_7d": 0,
+    "reminded_6h": 0,
+    "created_at": "2026-10-02T13:10:05.020295+00:00",
+    "updated_at": "2026-10-02T13:10:05.020295+00:00"
+  },
+  {
+    "id": "59c7b695-a6a2-4d0e-bc39-239ed9d17c9c",
+    "title": "Finance summary",
+    "notes": "Prepare financial summary",
+    "deadline": "2026-10-03T23:59:00Z",
+    "status": "todo",
+    "tags": [
+      "finanse"
+    ],
+    "reminded_7d": 1,
+    "reminded_6h": 0,
+    "created_at": "2026-10-02T15:32:24.960942+00:00",
+    "updated_at": "2026-10-02T15:32:24.960942+00:00"
+  },
+  {
+    "id": "a17a5472-600c-4554-bfe0-4d38a14b1667",
+    "title": "Book hairdresser",
+    "notes": "Schedule hair appointment",
+    "deadline": null,
+    "status": "todo",
+    "tags": [
+      "prywatne"
+    ],
+    "reminded_7d": 0,
+    "reminded_6h": 0,
+    "created_at": "2026-10-02T15:32:25.081462+00:00",
+    "updated_at": "2026-10-02T15:32:25.081462+00:00"
+  },
+  {
+    "id": "ea3364da-f40d-4dac-a08a-7891bff01382",
+    "title": "Zabukowac miejsca w samolocie Qatar Airways",
+    "notes": "Rezerwacja bilet\u00f3w",
+    "deadline": "2026-10-07T23:59:00Z",
+    "status": "todo",
+    "tags": [
+      "prywatne"
+    ],
+    "reminded_7d": 1,
+    "reminded_6h": 0,
+    "created_at": "2026-10-02T18:43:53.984163+00:00",
+    "updated_at": "2026-10-02T18:43:53.984163+00:00"
+  },
+  {
+    "id": "fdcb018b-18a8-4fec-a1fd-911e14e9aedd",
+    "title": "Applied Statistics 2 \u2014 Assignment 7",
+    "notes": "Deadline: 15 Oct 2026 at 23:59 (1 pt)",
+    "deadline": "2026-10-15T23:59:00Z",
+    "status": "todo",
+    "tags": [
+      "studia"
+    ],
+    "reminded_7d": 0,
+    "reminded_6h": 0,
+    "created_at": "2026-10-02T18:58:19.396515+00:00",
+    "updated_at": "2026-10-02T18:58:19.396515+00:00"
+  },
+  {
+    "id": "fb491ff2-5eb7-4def-ae67-4f28a2a9213d",
+    "title": "Applied Statistics 2 \u2014 Assignment 6",
+    "notes": "Deadline: 8 Oct 2026 at 23:59 (1 pt)",
+    "deadline": "2026-10-08T23:59:00Z",
+    "status": "todo",
+    "tags": [
+      "studia"
+    ],
+    "reminded_7d": 1,
+    "reminded_6h": 0,
+    "created_at": "2026-10-02T18:58:19.406524+00:00",
+    "updated_at": "2026-10-02T18:58:19.406524+00:00"
+  },
+  {
+    "id": "8d650fd5-21e5-4a7a-963f-c21e0e073a9a",
+    "title": "Applied Statistics 2 \u2014 JASP Assignment 3",
+    "notes": "Deadline: 12 Oct 2026 at 23:59 (1 pt)",
+    "deadline": "2026-10-12T23:59:00Z",
+    "status": "todo",
+    "tags": [
+      "studia"
+    ],
+    "reminded_7d": 0,
+    "reminded_6h": 0,
+    "created_at": "2026-10-02T18:58:19.416035+00:00",
+    "updated_at": "2026-10-02T18:58:19.416035+00:00"
+  },
+  {
+    "id": "6de256a7-12c4-4315-8125-e24ef4050573",
+    "title": "Applied Statistics 2 \u2014 Assignment 7",
+    "notes": "Deadline: 15 Oct 2026 at 23:59 (1 pt)",
+    "deadline": "2026-10-15T23:59:00Z",
+    "status": "todo",
+    "tags": [
+      "studia"
+    ],
+    "reminded_7d": 0,
+    "reminded_6h": 0,
+    "created_at": "2026-10-02T18:58:19.428023+00:00",
+    "updated_at": "2026-10-02T18:58:19.428023+00:00"
+  },
+  {
+    "id": "631e806d-55e2-4f79-b6a1-4aa58451a5c8",
+    "title": "Finance summary",
+    "notes": "Prepare financial summary",
+    "deadline": "2026-10-03T23:59:00Z",
+    "status": "todo",
+    "tags": [
+      "finanse"
+    ],
+    "reminded_7d": 1,
+    "reminded_6h": 0,
+    "created_at": "2026-10-02T18:58:19.439056+00:00",
+    "updated_at": "2026-10-02T18:58:19.439056+00:00"
+  },
+  {
+    "id": "49470e70-77d6-43a6-ba7e-92044325375a",
+    "title": "Book hairdresser",
+    "notes": "Schedule hair appointment",
+    "deadline": null,
+    "status": "todo",
+    "tags": [
+      "prywatne"
+    ],
+    "reminded_7d": 0,
+    "reminded_6h": 0,
+    "created_at": "2026-10-02T18:58:19.449228+00:00",
+    "updated_at": "2026-10-02T18:58:19.449228+00:00"
+  },
+  {
+    "id": "bd8460d3-c88d-4562-8fcc-8466be3ac298",
+    "title": "Zabukowac miejsca w samolocie Qatar Airways",
+    "notes": "Rezerwacja bilet\u00f3w",
+    "deadline": "2026-10-07T23:59:00Z",
+    "status": "todo",
+    "tags": [
+      "prywatne"
+    ],
+    "reminded_7d": 1,
+    "reminded_6h": 0,
+    "created_at": "2026-10-02T18:58:19.458915+00:00",
+    "updated_at": "2026-10-02T18:58:19.458915+00:00"
+  }
+]
