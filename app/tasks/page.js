@@ -63,7 +63,7 @@ export default function TasksPage() {
     const tag = formData.get('tag');
 
     try {
-      await fetch('/api/tasks', {
+      const res = await fetch('/api/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -74,8 +74,9 @@ export default function TasksPage() {
           tags: tag ? [tag] : []
         })
       });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       e.target.reset();
-      loadTasks();
+      await loadTasks();
     } catch (e) {
       alert('Error adding task: ' + e.message);
     }
@@ -83,13 +84,14 @@ export default function TasksPage() {
 
   const saveEdit = async (taskId, data) => {
     try {
-      await fetch(`/api/tasks/${taskId}`, {
+      const res = await fetch(`/api/tasks/${taskId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       setEditingId(null);
-      loadTasks();
+      await loadTasks();
     } catch (e) {
       alert('Error saving: ' + e.message);
     }
@@ -102,8 +104,9 @@ export default function TasksPage() {
   const deleteTask = async (id) => {
     if (!confirm('Delete?')) return;
     try {
-      await fetch(`/api/tasks/${id}`, { method: 'DELETE' });
-      loadTasks();
+      const res = await fetch(`/api/tasks/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      await loadTasks();
     } catch (e) {
       alert('Error: ' + e.message);
     }
