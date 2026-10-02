@@ -1,56 +1,85 @@
-import { sql } from '@vercel/postgres';
+import { Redis } from '@upstash/redis';
+import { v4 as uuidv4 } from 'uuid';
 
-// Helper: Initialize database on first use
-async function initDb() {
+// Initialize Redis client (uses UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN env vars)
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
+
+// Helper functions
+async function getTasks(status = null) {
   try {
-    // Create tasks table if it doesn't exist
-    await sql`
-      CREATE TABLE IF NOT EXISTS tasks (
-        id TEXT PRIMARY KEY,
-        title TEXT NOT NULL,
-        notes TEXT DEFAULT '',
-        deadline TEXT,
-        status TEXT DEFAULT 'todo',
-        tags TEXT DEFAULT '[]',
-        reminded_7d INTEGER DEFAULT 0,
-        reminded_6h INTEGER DEFAULT 0,
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-      )
-    `;
-  } catch (error) {
-    // Table might already exist, that's OK
-    if (!error.message.includes('already exists')) {
-      console.error('DB init error:', error);
+    const tasks = await redis.lrange('tasks', 0, -1);
+    let parsed = tasks.map(t => {
+      try {
+        return JSON.parse(typeof t === 'string' ? t : JSON.stringify(t));
+      } catch {
+        return null;
+      }
+    }).filter(t => t !== null);
+
+    if (status) {
+      parsed = parsed.filter(t => t.status === status);
     }
+
+    return parsed.sort((a, b) => {
+      // Sort by deadline
+      if (!a.deadline && !b.deadline) return 0;
+      if (!a.deadline) return 1;
+      if (!b.deadline) return -1;
+      return new Date(a.deadline) - new Date(b.deadline);
+    });
+  } catch (error) {
+    console.error('getTasks error:', error);
+    return [];
   }
 }
 
+async function saveTask(task) {
+  try {
+    const tasks = await getTasks();
+    const index = tasks.findIndex(t => t.id === task.id);
+    
+    if (index !== -1) {
+      tasks[index] = task;
+    } else {
+      tasks.push(task);
+    }
+
+    await redis.del('tasks');
+    for (const t of tasks) {
+      await redis.rpush('tasks', JSON.stringify(t));
+    }
+  } catch (error) {
+    console.error('saveTask error:', error);
+  }
+}
+
+async function deleteTaskById(id) {
+  try {
+    const tasks = await getTasks();
+    const filtered = tasks.filter(t => t.id !== id);
+    
+    await redis.del('tasks');
+    for (const t of filtered) {
+      await redis.rpush('tasks', JSON.stringify(t));
+    }
+    
+    return filtered.find(t => t.id === id) !== undefined;
+  } catch (error) {
+    console.error('deleteTaskById error:', error);
+    return false;
+  }
+}
+
+// API Handlers
 export async function GET(request) {
   try {
-    await initDb();
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status');
 
-    let result;
-    if (status) {
-      result = await sql`
-        SELECT * FROM tasks 
-        WHERE status = ${status}
-        ORDER BY deadline IS NULL, deadline ASC
-      `;
-    } else {
-      result = await sql`
-        SELECT * FROM tasks 
-        ORDER BY deadline IS NULL, deadline ASC
-      `;
-    }
-
-    // Parse tags from JSON strings
-    const tasks = result.rows.map(task => ({
-      ...task,
-      tags: typeof task.tags === 'string' ? JSON.parse(task.tags) : task.tags
-    }));
+    const tasks = await getTasks(status);
 
     return new Response(JSON.stringify(tasks), {
       status: 200,
@@ -67,23 +96,32 @@ export async function GET(request) {
 
 export async function POST(request) {
   try {
-    await initDb();
     const body = await request.json();
-    const id = crypto.randomUUID();
+    const id = uuidv4();
     const now = new Date().toISOString();
 
-    const result = await sql`
-      INSERT INTO tasks (id, title, notes, deadline, status, tags, created_at, updated_at)
-      VALUES (${id}, ${body.title}, ${body.notes || ''}, ${body.deadline || null}, 
-              ${body.status || 'todo'}, ${JSON.stringify(body.tags || [])}, ${now}, ${now})
-      RETURNING *
-    `;
+    const task = {
+      id,
+      title: body.title,
+      notes: body.notes || '',
+      deadline: body.deadline || null,
+      status: body.status || 'todo',
+      tags: body.tags || [],
+      reminded_7d: 0,
+      reminded_6h: 0,
+      created_at: now,
+      updated_at: now,
+    };
 
-    const task = result.rows[0];
-    return new Response(JSON.stringify({
-      ...task,
-      tags: body.tags || []
-    }), {
+    const tasks = await getTasks();
+    tasks.push(task);
+
+    await redis.del('tasks');
+    for (const t of tasks) {
+      await redis.rpush('tasks', JSON.stringify(t));
+    }
+
+    return new Response(JSON.stringify(task), {
       status: 201,
       headers: { 'Content-Type': 'application/json' },
     });
@@ -98,48 +136,32 @@ export async function POST(request) {
 
 export async function PATCH(request) {
   try {
-    await initDb();
     const { pathname } = new URL(request.url);
     const id = pathname.split('/').pop();
     const body = await request.json();
     const now = new Date().toISOString();
 
-    // Build update fields dynamically
-    const updates = {};
-    if (body.title !== undefined) updates.title = body.title;
-    if (body.notes !== undefined) updates.notes = body.notes;
-    if (body.deadline !== undefined) updates.deadline = body.deadline;
-    if (body.status !== undefined) updates.status = body.status;
-    if (body.tags !== undefined) updates.tags = JSON.stringify(body.tags);
-    updates.updated_at = now;
+    const tasks = await getTasks();
+    const task = tasks.find(t => t.id === id);
 
-    // Create SQL dynamically
-    const keys = Object.keys(updates);
-    const values = Object.values(updates);
-    
-    const setClause = keys.map((k, i) => {
-      if (k === 'tags' || k === 'deadline') {
-        return `${k} = $${i + 1}`;
-      }
-      return `${k} = $${i + 1}`;
-    }).join(', ');
-
-    const query = `UPDATE tasks SET ${setClause} WHERE id = $${keys.length + 1} RETURNING *`;
-    
-    const result = await sql.query(query, [...values, id]);
-
-    if (result.rows.length === 0) {
+    if (!task) {
       return new Response(JSON.stringify({ error: 'Task not found' }), {
         status: 404,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    const task = result.rows[0];
-    return new Response(JSON.stringify({
-      ...task,
-      tags: body.tags !== undefined ? body.tags : JSON.parse(task.tags)
-    }), {
+    // Update fields
+    if (body.title !== undefined) task.title = body.title;
+    if (body.notes !== undefined) task.notes = body.notes;
+    if (body.deadline !== undefined) task.deadline = body.deadline;
+    if (body.status !== undefined) task.status = body.status;
+    if (body.tags !== undefined) task.tags = body.tags;
+    task.updated_at = now;
+
+    await saveTask(task);
+
+    return new Response(JSON.stringify(task), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
@@ -154,16 +176,12 @@ export async function PATCH(request) {
 
 export async function DELETE(request) {
   try {
-    await initDb();
     const { pathname } = new URL(request.url);
     const id = pathname.split('/').pop();
 
-    const result = await sql`
-      DELETE FROM tasks WHERE id = ${id}
-      RETURNING id
-    `;
+    const deleted = await deleteTaskById(id);
 
-    if (result.rows.length === 0) {
+    if (!deleted) {
       return new Response(JSON.stringify({ error: 'Task not found' }), {
         status: 404,
         headers: { 'Content-Type': 'application/json' },
