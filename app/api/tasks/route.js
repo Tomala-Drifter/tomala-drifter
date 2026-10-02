@@ -1,194 +1,70 @@
-import { put, get, del } from '@vercel/blob';
-import { v4 as uuidv4 } from 'uuid';
+// API Proxy with health check & fallback
+const TUNNEL_API = 'https://todo.tomala-drifter.com';
+const LOCAL_API = 'http://127.0.0.1:8420';
+let lastHealthCheck = 0;
+let tunnelHealthy = true;
 
-const BLOB_KEY = 'tasks.json';
+async function checkTunnelHealth() {
+  const now = Date.now();
+  if (now - lastHealthCheck < 300000) return tunnelHealthy;
 
-async function getTasks(status = null) {
+  lastHealthCheck = now;
   try {
-    const blob = await get(BLOB_KEY);
-    if (!blob) return [];
-    
-    const data = await blob.text();
-    let tasks = JSON.parse(data);
+    const response = await fetch(`${TUNNEL_API}/api/tasks?status=todo`, {
+      signal: AbortSignal.timeout(5000),
+    });
+    tunnelHealthy = response.ok;
+  } catch (error) {
+    tunnelHealthy = false;
+  }
+  return tunnelHealthy;
+}
 
-    if (status) {
-      tasks = tasks.filter(t => t.status === status);
-    }
+async function forwardRequest(method, path, body = null) {
+  const isHealthy = await checkTunnelHealth();
+  const apiUrl = isHealthy ? TUNNEL_API : LOCAL_API;
+  const url = `${apiUrl}/api${path}`;
 
-    return tasks.sort((a, b) => {
-      if (!a.deadline && !b.deadline) return 0;
-      if (!a.deadline) return 1;
-      if (!b.deadline) return -1;
-      return new Date(a.deadline) - new Date(b.deadline);
+  const options = {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    signal: AbortSignal.timeout(15000),
+  };
+
+  if (body) options.body = JSON.stringify(body);
+
+  try {
+    const response = await fetch(url, options);
+    const data = await response.json();
+    return new Response(JSON.stringify(data), {
+      status: response.status,
+      headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error('getTasks error:', error);
-    return [];
+    return new Response(JSON.stringify({ error: 'API unavailable' }), {
+      status: 503,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }
 
-async function saveTasks(tasks) {
-  try {
-    await put(BLOB_KEY, JSON.stringify(tasks, null, 2), {
-      access: 'public',
-      contentType: 'application/json',
-    });
-  } catch (error) {
-    console.error('saveTasks error:', error);
-  }
-}
-
-// List all tasks or get single task
 export async function GET(request) {
-  try {
-    const { pathname } = new URL(request.url);
-    const isDetailRoute = pathname.includes('/api/tasks/') && pathname !== '/api/tasks';
-    
-    if (isDetailRoute) {
-      // GET /api/tasks/[id]
-      const id = pathname.split('/').pop();
-      const tasks = await getTasks();
-      const task = tasks.find(t => t.id === id);
-
-      if (!task) {
-        return new Response(JSON.stringify({ error: 'Task not found' }), {
-          status: 404,
-          headers: { 'Content-Type': 'application/json' },
-        });
-      }
-
-      return new Response(JSON.stringify(task), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-
-    // GET /api/tasks (list all)
-    const { searchParams } = new URL(request.url);
-    const status = searchParams.get('status');
-    const tasks = await getTasks(status);
-
-    return new Response(JSON.stringify(tasks), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  } catch (error) {
-    console.error('GET error:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
+  const path = request.nextUrl.pathname.replace('/api/tasks', '');
+  return forwardRequest('GET', '/tasks' + path);
 }
 
-// Create task
 export async function POST(request) {
-  try {
-    const body = await request.json();
-    const id = uuidv4();
-    const now = new Date().toISOString();
-
-    const task = {
-      id,
-      title: body.title,
-      notes: body.notes || '',
-      deadline: body.deadline || null,
-      status: body.status || 'todo',
-      tags: body.tags || [],
-      reminded_7d: 0,
-      reminded_6h: 0,
-      created_at: now,
-      updated_at: now,
-    };
-
-    const tasks = await getTasks();
-    tasks.push(task);
-    await saveTasks(tasks);
-
-    return new Response(JSON.stringify(task), {
-      status: 201,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  } catch (error) {
-    console.error('POST error:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
+  const body = await request.json();
+  return forwardRequest('POST', '/tasks', body);
 }
 
-// Update task
 export async function PATCH(request) {
-  try {
-    const { pathname } = new URL(request.url);
-    const id = pathname.split('/').pop();
-    const body = await request.json();
-    const now = new Date().toISOString();
-
-    const tasks = await getTasks();
-    const taskIndex = tasks.findIndex(t => t.id === id);
-
-    if (taskIndex === -1) {
-      return new Response(JSON.stringify({ error: 'Task not found' }), {
-        status: 404,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-
-    const task = tasks[taskIndex];
-    
-    if (body.title !== undefined) task.title = body.title;
-    if (body.notes !== undefined) task.notes = body.notes;
-    if (body.deadline !== undefined) task.deadline = body.deadline;
-    if (body.status !== undefined) task.status = body.status;
-    if (body.tags !== undefined) task.tags = body.tags;
-    task.updated_at = now;
-
-    tasks[taskIndex] = task;
-    await saveTasks(tasks);
-
-    return new Response(JSON.stringify(task), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  } catch (error) {
-    console.error('PATCH error:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
+  const path = request.nextUrl.pathname.replace('/api/tasks', '');
+  const body = await request.json();
+  return forwardRequest('PATCH', '/tasks' + path, body);
 }
 
-// Delete task
 export async function DELETE(request) {
-  try {
-    const { pathname } = new URL(request.url);
-    const id = pathname.split('/').pop();
-
-    const tasks = await getTasks();
-    const task = tasks.find(t => t.id === id);
-
-    if (!task) {
-      return new Response(JSON.stringify({ error: 'Task not found' }), {
-        status: 404,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-
-    const filtered = tasks.filter(t => t.id !== id);
-    await saveTasks(filtered);
-
-    return new Response(JSON.stringify({ status: 'deleted', id }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  } catch (error) {
-    console.error('DELETE error:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
+  const path = request.nextUrl.pathname.replace('/api/tasks', '');
+  return forwardRequest('DELETE', '/tasks' + path);
 }
