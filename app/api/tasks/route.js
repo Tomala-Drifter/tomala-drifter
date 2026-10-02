@@ -39,26 +39,53 @@ export async function POST(request, { params }) {
 export async function PATCH(request, { params }) {
   const path = request.nextUrl.pathname.replace('/api/tasks', '');
   const body = await request.json();
-  const response = await fetch(`${TODO_API}/api/tasks${path}`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
-  const data = await response.json();
-  return new Response(JSON.stringify(data), {
-    status: response.status,
-    headers: { 'Content-Type': 'application/json' },
-  });
+  try {
+    const response = await fetch(`${TODO_API}/api/tasks${path}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    if (!response.ok) {
+      return new Response(JSON.stringify({ error: `HTTP ${response.status}` }), {
+        status: response.status,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    const data = await response.json();
+    return new Response(JSON.stringify(data), {
+      status: response.status,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    return new Response(JSON.stringify({ error: 'API unavailable: ' + error.message }), {
+      status: 503,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
 }
 
 export async function DELETE(request, { params }) {
   const path = request.nextUrl.pathname.replace('/api/tasks', '');
-  const response = await fetch(`${TODO_API}/api/tasks${path}`, {
-    method: 'DELETE',
-  });
-  const data = await response.json();
-  return new Response(JSON.stringify(data), {
-    status: response.status,
-    headers: { 'Content-Type': 'application/json' },
-  });
+  try {
+    const response = await fetch(`${TODO_API}/api/tasks${path}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (!response.ok) {
+      return new Response(JSON.stringify({ error: `HTTP ${response.status}` }), {
+        status: response.status,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    const data = await response.json();
+    return new Response(JSON.stringify(data), {
+      status: response.status,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    return new Response(JSON.stringify({ error: 'API unavailable: ' + error.message }), {
+      status: 503,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
 }
