@@ -1,60 +1,88 @@
-const TUNNEL_API = 'https://todo.tomala-drifter.com';
+import { kv } from '@vercel/kv';
+import { v4 as uuidv4 } from 'uuid';
 
-async function forwardRequest(method, path, body = null) {
-  // Add cache buster to URL
-  const separator = path.includes('?') ? '&' : '?';
-  const url = `${TUNNEL_API}/api${path}${separator}cb=${Date.now()}`;
-  
-  const options = {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
-      'Pragma': 'no-cache',
-      'Expires': '0',
-    },
-  };
+const TASKS_KEY = 'tasks:list';
 
-  if (body) options.body = JSON.stringify(body);
-
+async function getTasks(status = null) {
   try {
-    const response = await fetch(url, options);
-    const data = await response.json();
-    
-    return new Response(JSON.stringify(data), {
-      status: response.status,
+    const data = await kv.get(TASKS_KEY);
+    let tasks = data ? (typeof data === 'string' ? JSON.parse(data) : data) : [];
+
+    if (status) {
+      tasks = tasks.filter(t => t.status === status);
+    }
+
+    return tasks.sort((a, b) => {
+      if (!a.deadline && !b.deadline) return 0;
+      if (!a.deadline) return 1;
+      if (!b.deadline) return -1;
+      return new Date(a.deadline) - new Date(b.deadline);
+    });
+  } catch (error) {
+    return [];
+  }
+}
+
+async function saveTasks(tasks) {
+  try {
+    await kv.set(TASKS_KEY, JSON.stringify(tasks));
+  } catch (error) {
+    console.error('saveTasks error:', error);
+  }
+}
+
+export async function GET(request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const status = searchParams.get('status');
+    const tasks = await getTasks(status);
+
+    return new Response(JSON.stringify(tasks), {
+      status: 200,
       headers: {
         'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
-        'Pragma': 'no-cache',
-        'Expires': '0',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
       },
     });
   } catch (error) {
     return new Response(JSON.stringify({ error: error.message }), {
-      status: 503,
+      status: 500,
       headers: { 'Content-Type': 'application/json' },
     });
   }
 }
 
-export async function GET(request) {
-  const path = request.nextUrl.pathname.replace('/api/tasks', '') + request.nextUrl.search;
-  return forwardRequest('GET', '/tasks' + path);
-}
-
 export async function POST(request) {
-  const body = await request.json();
-  return forwardRequest('POST', '/tasks', body);
-}
+  try {
+    const body = await request.json();
+    const id = uuidv4();
+    const now = new Date().toISOString();
 
-export async function PATCH(request) {
-  const path = request.nextUrl.pathname.replace('/api/tasks', '');
-  const body = await request.json();
-  return forwardRequest('PATCH', '/tasks' + path, body);
-}
+    const task = {
+      id,
+      title: body.title,
+      notes: body.notes || '',
+      deadline: body.deadline || null,
+      status: body.status || 'todo',
+      tags: body.tags || [],
+      reminded_7d: 0,
+      reminded_6h: 0,
+      created_at: now,
+      updated_at: now,
+    };
 
-export async function DELETE(request) {
-  const path = request.nextUrl.pathname.replace('/api/tasks', '');
-  return forwardRequest('DELETE', '/tasks' + path);
+    const tasks = await getTasks();
+    tasks.push(task);
+    await saveTasks(tasks);
+
+    return new Response(JSON.stringify(task), {
+      status: 201,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
 }
