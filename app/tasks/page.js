@@ -2,6 +2,17 @@
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
+// Domyślne taski z bazy
+const INITIAL_TASKS = [
+  {"id":"6c276c7f-9e31-4008-ab23-cb7803c20288","title":"Applied Statistics 2 — Assignment 7","notes":"Deadline: 15 Oct 2026 at 23:59 (1 pt)","deadline":"2026-10-15T23:59:00Z","status":"todo","tags":["studia"],"created_at":"2026-10-02T13:09:59.991009+00:00","updated_at":"2026-10-02T13:09:59.991009+00:00"},
+  {"id":"d5ee52e7-dd29-43a2-b029-f752667b6151","title":"Applied Statistics 2 — Assignment 6","notes":"Deadline: 8 Oct 2026 at 23:59 (1 pt)","deadline":"2026-10-08T23:59:00Z","status":"todo","tags":["studia"],"created_at":"2026-10-02T13:10:04.808010+00:00","updated_at":"2026-10-02T13:10:04.808010+00:00"},
+  {"id":"12ea27a3-134b-4ff6-a686-9980c1402453","title":"Applied Statistics 2 — JASP Assignment 3","notes":"Deadline: 12 Oct 2026 at 23:59 (1 pt)","deadline":"2026-10-12T23:59:00Z","status":"todo","tags":["studia"],"created_at":"2026-10-02T13:10:04.881157+00:00","updated_at":"2026-10-02T13:10:04.881157+00:00"},
+  {"id":"b19fd61e-356c-4bc2-a556-4ef63fc1d085","title":"Finance summary","notes":"Prepare financial summary","deadline":"2026-10-03T23:59:00Z","status":"todo","tags":["finanse"],"created_at":"2026-10-02T15:32:24.960942+00:00","updated_at":"2026-10-02T15:32:24.960942+00:00"},
+  {"id":"7f3e4c5d-8e9a-4b2c-9d1e-5a6f7c8d9e0f","title":"Book hairdresser","notes":"Schedule hair appointment","deadline":null,"status":"todo","tags":["prywatne"],"created_at":"2026-10-02T15:32:25.081462+00:00","updated_at":"2026-10-02T15:32:25.081462+00:00"},
+  {"id":"9a8b7c6d-5e4f-3c2b-1a0d-9e8f7d6c5b4a","title":"Zabukowac miejsca w samolocie Qatar Airways","notes":"Rezerwacja biletów","deadline":"2026-10-07T23:59:00Z","status":"todo","tags":["prywatne"],"created_at":"2026-10-02T18:43:53.984163+00:00","updated_at":"2026-10-02T18:43:53.984163+00:00"},
+  {"id":"e7e30bae-a496-4a7c-9abb-98da44c1ef83","title":"Task dodany przez API","notes":"Test","deadline":null,"status":"todo","tags":["prywatne"],"created_at":"2026-10-02T21:03:35.720193+00:00","updated_at":"2026-10-02T21:03:35.720193+00:00"}
+];
+
 export default function TasksPage() {
   const [tasks, setTasks] = useState([]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -20,11 +31,18 @@ export default function TasksPage() {
     projekty: '🛠️', finanse: '💰'
   };
 
-  // Load from localStorage on mount
+  // Load from localStorage on mount, fallback to INITIAL_TASKS
   useEffect(() => {
     const saved = localStorage.getItem('tasks');
     if (saved) {
-      setTasks(JSON.parse(saved));
+      try {
+        setTasks(JSON.parse(saved));
+      } catch (e) {
+        setTasks(INITIAL_TASKS);
+      }
+    } else {
+      setTasks(INITIAL_TASKS);
+      localStorage.setItem('tasks', JSON.stringify(INITIAL_TASKS));
     }
     setMounted(true);
   }, []);
@@ -158,7 +176,7 @@ export default function TasksPage() {
 
         <hr style={{ margin: '30px 0', border: 'none', borderTop: '1px solid #333' }} />
 
-        <h2 style={{ marginTop: 0, fontSize: '1.2rem' }}>📋 All Tasks</h2>
+        <h2 style={{ marginTop: 0, fontSize: '1.2rem' }}>📋 All Tasks ({tasks.length})</h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {tasks.length === 0 ? (
             <p style={{ color: '#8b8f9a', textAlign: 'center', padding: '40px' }}>No tasks yet</p>
