@@ -10,7 +10,8 @@ const INITIAL_TASKS = [
   {"id":"b19fd61e-356c-4bc2-a556-4ef63fc1d085","title":"Finance summary","notes":"Prepare financial summary","deadline":"2026-10-03T23:59:00Z","status":"todo","tags":["finanse"],"created_at":"2026-10-02T15:32:24.960942+00:00","updated_at":"2026-10-02T15:32:24.960942+00:00"},
   {"id":"7f3e4c5d-8e9a-4b2c-9d1e-5a6f7c8d9e0f","title":"Book hairdresser","notes":"Schedule hair appointment","deadline":null,"status":"todo","tags":["prywatne"],"created_at":"2026-10-02T15:32:25.081462+00:00","updated_at":"2026-10-02T15:32:25.081462+00:00"},
   {"id":"9a8b7c6d-5e4f-3c2b-1a0d-9e8f7d6c5b4a","title":"Zabukowac miejsca w samolocie Qatar Airways","notes":"Rezerwacja biletów","deadline":"2026-10-07T23:59:00Z","status":"todo","tags":["prywatne"],"created_at":"2026-10-02T18:43:53.984163+00:00","updated_at":"2026-10-02T18:43:53.984163+00:00"},
-  {"id":"e7e30bae-a496-4a7c-9abb-98da44c1ef83","title":"Task dodany przez API","notes":"Test","deadline":null,"status":"todo","tags":["prywatne"],"created_at":"2026-10-02T21:03:35.720193+00:00","updated_at":"2026-10-02T21:03:35.720193+00:00"}
+  {"id":"e7e30bae-a496-4a7c-9abb-98da44c1ef83","title":"Task dodany przez API","notes":"Test","deadline":null,"status":"todo","tags":["prywatne"],"created_at":"2026-10-02T21:03:35.720193+00:00","updated_at":"2026-10-02T21:03:35.720193+00:00"},
+  {"id":"73c88d23-53a4-4f14-a1f5-56ce714b27aa","title":"Wysłać wiadomość na FBN do Taguj To","notes":"","deadline":"2026-10-07T12:00:00Z","status":"todo","tags":["prywatne"],"created_at":"2026-10-03T19:15:11.103874+00:00","updated_at":"2026-10-03T19:15:11.103884+00:00"}
 ];
 
 export default function TasksPage() {
