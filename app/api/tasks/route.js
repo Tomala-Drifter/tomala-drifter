@@ -1,88 +1,30 @@
-import { kv } from '@vercel/kv';
-import { v4 as uuidv4 } from 'uuid';
+import { handler, json, readJson } from '@/lib/http';
+import { listTasks, createTask, updateTask, deleteTask } from '@/lib/tasks';
 
-const TASKS_KEY = 'tasks:list';
+export const dynamic = 'force-dynamic';
 
-async function getTasks(status = null) {
-  try {
-    const data = await kv.get(TASKS_KEY);
-    let tasks = data ? (typeof data === 'string' ? JSON.parse(data) : data) : [];
+export const GET = handler(async (request) => {
+  const p = new URL(request.url).searchParams;
+  const tasks = await listTasks({
+    status: p.get('status') || undefined,
+    tag: p.get('tag') || undefined,
+    from: p.get('from') || undefined,
+    to: p.get('to') || undefined,
+  });
+  return json(tasks);
+});
 
-    if (status) {
-      tasks = tasks.filter(t => t.status === status);
-    }
+export const POST = handler(async (request) => json(await createTask(await readJson(request)), 201));
 
-    return tasks.sort((a, b) => {
-      if (!a.deadline && !b.deadline) return 0;
-      if (!a.deadline) return 1;
-      if (!b.deadline) return -1;
-      return new Date(a.deadline) - new Date(b.deadline);
-    });
-  } catch (error) {
-    return [];
-  }
-}
+// PATCH/DELETE accept the id in the body ({ id }) or as ?id=
+export const PATCH = handler(async (request) => {
+  const body = await readJson(request);
+  const id = body.id ?? new URL(request.url).searchParams.get('id');
+  return json(await updateTask(id, body));
+});
 
-async function saveTasks(tasks) {
-  try {
-    await kv.set(TASKS_KEY, JSON.stringify(tasks));
-  } catch (error) {
-    console.error('saveTasks error:', error);
-  }
-}
-
-export async function GET(request) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const status = searchParams.get('status');
-    const tasks = await getTasks(status);
-
-    return new Response(JSON.stringify(tasks), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-      },
-    });
-  } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
-}
-
-export async function POST(request) {
-  try {
-    const body = await request.json();
-    const id = uuidv4();
-    const now = new Date().toISOString();
-
-    const task = {
-      id,
-      title: body.title,
-      notes: body.notes || '',
-      deadline: body.deadline || null,
-      status: body.status || 'todo',
-      tags: body.tags || [],
-      reminded_7d: 0,
-      reminded_6h: 0,
-      created_at: now,
-      updated_at: now,
-    };
-
-    const tasks = await getTasks();
-    tasks.push(task);
-    await saveTasks(tasks);
-
-    return new Response(JSON.stringify(task), {
-      status: 201,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
-}
+export const DELETE = handler(async (request) => {
+  let id = new URL(request.url).searchParams.get('id');
+  if (!id) id = (await readJson(request)).id;
+  return json(await deleteTask(id));
+});

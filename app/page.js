@@ -12,7 +12,7 @@ export default function Home() {
             <a href="#about" className="hover:text-gray-400 transition">About</a>
             <a href="#projects" className="hover:text-gray-400 transition">Projects</a>
             <a href="#contact" className="hover:text-gray-400 transition">Contact</a>
-            <a href="/to-do-list" className="hover:text-blue-400 transition">Tasks</a>
+            <a href="/tasks" className="hover:text-blue-400 transition">Tasks</a>
           </div>
         </div>
       </nav>
@@ -132,7 +132,7 @@ export default function Home() {
               LinkedIn
             </a>
             <a 
-              href="/to-do-list" 
+              href="/tasks" 
               className="px-8 py-3 border border-gray-600 hover:border-gray-400 rounded-lg font-medium transition"
             >
               My Tasks
