@@ -18,7 +18,15 @@
       "Bash(git branch *)",
       "Bash(git pull)",
       "Bash(git pull *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(npm audit)",
+      "Bash(npm audit *)",
+      "Bash(npm ci)",
+      "Bash(git stash)",
+      "Bash(git stash *)",
+      "Bash(git log)",
+      "Bash(git log *)",
+      "Bash(curl *)"
     ],
     "deny": [
       "Read(~/.hermes/**)",
