@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { hasValidSession, isAuthorized } from '@/lib/auth';
 
-export async function middleware(request) {
+export async function proxy(request) {
   const { pathname, search } = request.nextUrl;
   const isApi = pathname.startsWith('/api/');
 
