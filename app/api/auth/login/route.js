@@ -18,6 +18,6 @@ export async function POST(request) {
     return json({ error: 'invalid password' }, 401);
   }
 
-  cookies().set(SESSION_COOKIE, await createSessionToken(), sessionCookieOptions());
+  (await cookies()).set(SESSION_COOKIE, await createSessionToken(), sessionCookieOptions());
   return json({ ok: true });
 }
