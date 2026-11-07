@@ -138,6 +138,26 @@ nav button:disabled{opacity:.3;cursor:default;background:transparent;color:var(-
 #count{font-family:var(--mono);font-size:14px;color:var(--muted);min-width:120px;text-align:center}
 @media (prefers-reduced-motion:no-preference){.shine{animation:sweep 3.2s ease-in-out 0.6s infinite}}
 @keyframes sweep{0%,55%{opacity:0;transform:translateX(-60px)}70%{opacity:1}100%{opacity:0;transform:translateX(120px)}}
+
+/* quiz */
+.qz{display:flex;flex-direction:column;gap:16px;flex:1;min-height:0}
+.qz .top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:14px;color:var(--muted)}
+.qz .bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.qz .bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+.qz .q{font-family:var(--display);font-size:32px;line-height:1.15;min-height:76px}
+.qz .opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.qz .opt{font:600 18px var(--body);text-align:left;background:#fff;border:1.5px solid var(--ink);color:var(--ink);border-radius:10px;padding:14px 16px;cursor:pointer;line-height:1.3}
+.qz .opt:hover:not(:disabled){background:var(--mintSoft)}
+.qz .opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.qz .opt.ok{background:var(--accent);border-color:var(--accent);color:#fff}
+.qz .opt.no{background:var(--bad);border-color:var(--bad);color:#fff}
+.qz .opt:disabled{cursor:default}
+.qz .fb{font-size:16px;line-height:1.45;min-height:46px;color:var(--ink)}
+.qz .act{display:flex;gap:12px;align-items:center}
+.qz .btn{font:600 16px var(--body);background:var(--ink);color:var(--paper);border:0;border-radius:999px;padding:10px 22px;cursor:pointer}
+.qz .btn.alt{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.qz .score{font-family:var(--display);font-size:72px;color:var(--accent);line-height:1}
+.qz .verdict{font-size:22px;line-height:1.35;max-width:40ch}
 </style>
 
 </head><body><div class="viewport" id="vp"><div class="stage" id="stage" style="transform: translate(-50%, -50%) scale(0.8875);">
@@ -294,10 +314,18 @@ nav button:disabled{opacity:.3;cursor:default;background:transparent;color:var(-
   </div>
 </section>
 
+
+<section class="slide" aria-label="Quiz o Glanc">
+  <div class="eyebrow">Quiz <span class="app">· losowe 5 pytań o Glanc</span></div>
+  <h2>Ile naprawdę wiesz o Glancu?</h2>
+  <div class="qz" id="qz"></div>
+</section>
+
 </div></div>
 <nav>
   <button id="prev" type="button" aria-label="Poprzedni slajd" disabled="">← Wstecz</button>
   <span id="count" aria-live="polite">1 / 5</span>
+  <button id="quizbtn" type="button">Quiz</button>
   <button id="next" type="button" aria-label="Następny slajd">Dalej →</button>
 </nav>
 
@@ -444,14 +472,66 @@ document.getElementById('cash').innerHTML=cc;
 document.getElementById('cnote').innerHTML='Stan konta narastająco, w zł. Start: koszty jednorazowe i pierwszy zapas. Towar kupujemy 1,5 miesiąca do przodu, platformy wypłacają ok. 40% sprzedaży z miesięcznym opóźnieniem. Najgłębiej jest przed Wielkanocą, bo wtedy kupujemy towar na szczyt. W wariancie 20 tys. zł trzeba zacząć od testu z Dodatku C i finansować wzrost z zysku albo kredytem kupieckim u producenta.';
 document.getElementById('lev').textContent='prowizja 5% dla artykułów domowych (niepotwierdzona w PL) dałaby +'+k(M.levers.fee5)+' tys. zł rocznie, prowizja dla creatorów 12% zamiast 15% +'+k(M.levers.aff12)+' tys. zł, a każde 10% zamówień przesunięte na zestaw 149 zł podnosi średni koszyk o ok. 7 zł.';
 
+
+/* ---------- quiz ---------- */
+var QP=[
+["Ile kosztuje zestaw Glanc?",["79 zł","49 zł","99 zł","149 zł"],0,"Zestaw do płyty kosztuje 79 zł. Zestaw Kuchnia z pastą uniwersalną: 149 zł."],
+["Co zawiera zestaw Glanc?",["Skrobak z 5 ostrzami, pasta do szkła 250 ml, Tarcza 50 ml, mikrofibra","Tylko pasta i gąbka","Spray 500 ml i rękawice","Pasta 850 g i szczotka"],0,"Skrobak + 5 ostrzy, pasta do szkła 250 ml, Tarcza 50 ml i mikrofibra."],
+["Ile czasu trwa kolejne mycie po nałożeniu Tarczy?",["Ok. 10 sekund","Ok. 1 minuta","Ok. 5 minut","Pół godziny"],0,"Tarcza zostawia warstwę, z której brud schodzi jednym przetarciem w ok. 10 s."],
+["Ile pełna prezentacja zakłada ceny za pastę The Pink Stuff 850 g (promocja, PL)?",["14,99 zł","29,99 zł","49 zł","9 zł"],0,"Pasta to towar za ok. 15 zł. Dlatego sprzedajemy gotowe rozwiązanie, nie słoik."],
+["Ile kosztowałoby skompletowanie podobnych rzeczy osobno?",["Ok. 40–45 zł","Ok. 10 zł","Ok. 120 zł","Ok. 200 zł"],0,"Ok. 40–45 zł. Dopłata ok. 35 zł za wygodę i markę musi się obronić w teście."],
+["Od kiedy działa TikTok Shop w Polsce?",["15.06.2026","01.01.2025","15.06.2027","01.03.2026"],0,"Start TikTok Shop w Polsce: 15.06.2026."],
+["Jaki jest planowany start sprzedaży Glanc?",["Styczeń 2027","Czerwiec 2026","Wrzesień 2027","Grudzień 2026"],0,"Plan zakłada start w styczniu 2027."],
+["W którym miesiącu scenariusz bazowy dochodzi do miliona zł sprzedaży łącznie?",["W 12. miesiącu","W 6. miesiącu","W 3. miesiącu","W 24. miesiącu"],0,"Scenariusz bazowy: milion po 12 miesiącach (pesymistyczny 18, optymistyczny 10). SZACUNEK."],
+["Ile zostaje na czysto z miliona w scenariuszu bazowym?",["Ok. 68 tys. zł","Ok. 500 tys. zł","Ok. 250 tys. zł","Ok. 10 tys. zł"],0,"Ok. 68 tys. zł po kosztach startu, przed podatkiem dochodowym, bez pensji założycieli. SZACUNEK."],
+["Jak nazywa się produkt z żółtą butelką 50 ml w zestawie?",["Tarcza","Blask","Pancerz","Lustro"],0,"Tarcza to powłoka ochronna, dzięki której kolejne mycie trwa 10 s."],
+["Które nazwy były rozważane obok Glanc?",["Szoruj i Lśni","Blask i Błysk","Czysto i Gładko","Lux i Polish"],0,"Szoruj kojarzy się z harówką, a Lśni jest nijakie."],
+["Jaki dźwięk ma być słychać w 2. sekundzie reklamy?",["Skrobak zdejmujący przypalony nalot","Syrena","Odgłos spryskiwacza","Muzyka klasyczna"],0,"1,0–2,0 s: skrobak zdejmuje nalot jednym pasem. Słychać ten dźwięk."],
+["Jaki napis pojawia się na hooku reklamy w 0–1 s?",["Ta płyta miała iść na śmietnik.","Kup teraz!","Tylko 79 zł","Nowość roku"],0,"Hook: przypalona płyta z góry i napis „Ta płyta miała iść na śmietnik.”"],
+["Ile średnio zostaje na jednej paczce sprzedanej przez creatora?",["Ok. 10 zł","Ok. 40 zł","Ok. 60 zł","Nic, jest strata"],0,"9,86 zł, czyli ok. 15% ceny netto. SZACUNEK."],
+["Jaka jest prowizja TikTok od ceny brutto w modelu?",["9%","2%","25%","0%"],0,"Prowizja TikTok: 9% od ceny brutto (oficjalnie)."],
+["Jaki stop-warunek ma test po 4 tygodniach?",["Żaden film nie przekroczył 50 tys. wyświetleń lub GPM poniżej 15 zł","Brak komentarzy","Mniej niż 10 zamówień","Spadek obserwujących"],0,"Test: 6 tygodni, ok. 9 tys. zł, 200 zestawów, 100 próbek dla creatorów."],
+["Ile zestawów robimy w teście przed produkcją?",["200","20","2000","3000"],0,"200 zestawów z gotowych elementów. MOQ własnej pasty to ok. 3 tys. szt."],
+["Ile gotówki potrzeba, zanim biznes zacznie sam się finansować?",["Ok. 80 tys. zł","Ok. 5 tys. zł","Ok. 300 tys. zł","Nic"],0,"Najgłębiej jest przed Wielkanocą, bo kupujemy towar na szczyt. SZACUNEK."],
+["Jakie ryzyko prawne trzeba sprawdzić przed startem?",["Znak Glanc w UPRP i EUIPO","Patent na skrobak","Licencję na reklamę","Pozwolenie na wysyłkę"],0,"Działa już firma AM-GLANC, a w drogeriach jest GlanzMeister."],
+["Dlaczego plan to tuba zamiast butelki na pastę?",["Wyciek płynu w paczce oznacza zwrot","Jest ładniejsza","Jest tańsza w transporcie powietrznym","Wymaga tego Allegro"],0,"Płyny w paczce to ryzyko. Tuba, folia termokurczliwa i karton z przegrodą."],
+["Który kanał daje największą marżę na paczce (tabela w Dodatku A)?",["Allegro (ok. 19,80 zł)","Sklep własny","TikTok creator","TikTok LIVE"],0,"Allegro: ok. 19,80 zł na paczce. TikTok creator i reklama/LIVE: 9,86 zł, sklep: 9,16 zł."]
+];
+function shuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+var qbox=document.getElementById('qz'),qs=[],qi=0,qsc=0;
+function qStart(){qs=shuf(QP).slice(0,5).map(function(q){var o=q[1].map(function(t,k){return {t:t,c:k===q[2]};});return {q:q[0],o:shuf(o),e:q[3]};});qi=0;qsc=0;qShow();}
+function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function qShow(){
+  var q=qs[qi];
+  qbox.innerHTML='<div class="top"><span>Pytanie '+(qi+1)+' / 5</span><span>Wynik: '+qsc+'</span></div><div class="bar"><i style="width:'+(qi/5*100)+'%"></i></div>'+
+   '<div class="q">'+esc(q.q)+'</div><div class="opts">'+q.o.map(function(o,k){return '<button type="button" class="opt" data-k="'+k+'">'+esc(o.t)+'</button>';}).join('')+'</div>'+
+   '<div class="fb" id="qfb" aria-live="polite"></div><div class="act" id="qact"></div>';
+  [].forEach.call(qbox.querySelectorAll('.opt'),function(b){b.onclick=function(){qAns(+b.getAttribute('data-k'));};});
+}
+function qAns(k){
+  var q=qs[qi],ok=q.o[k].c;if(ok)qsc++;
+  [].forEach.call(qbox.querySelectorAll('.opt'),function(b,j){b.disabled=true;if(q.o[j].c)b.classList.add('ok');else if(j===k)b.classList.add('no');});
+  document.getElementById('qfb').innerHTML='<b>'+(ok?'Dobrze. ':'Nie tym razem. ')+'</b>'+esc(q.e);
+  var last=qi===4;document.getElementById('qact').innerHTML='<button type="button" class="btn" id="qnext">'+(last?'Zobacz wynik':'Dalej')+'</button>';
+  document.getElementById('qnext').onclick=function(){if(last)qEnd();else{qi++;qShow();}};
+  document.getElementById('qnext').focus();
+}
+function qEnd(){
+  var v=qsc===5?'Na glanc. Znasz ten produkt lepiej niż założyciele.':qsc>=3?'Całkiem nieźle. Jeszcze rzut oka na dodatki A i C.':'Powtórka z prezentacji się przyda. Zacznij od slajdu 2 i Dodatku A.';
+  qbox.innerHTML='<div class="top"><span>Koniec</span><span></span></div><div class="bar"><i style="width:100%"></i></div><div class="score">'+qsc+' / 5</div><div class="verdict">'+v+'</div><div class="act"><button type="button" class="btn" id="qagain">Jeszcze raz (nowe pytania)</button><button type="button" class="btn alt" id="qback">Wróć do prezentacji</button></div>';
+  document.getElementById('qagain').onclick=qStart;document.getElementById('qback').onclick=function(){go(0)};
+}
+var qInit=false;window.glancQuiz=function(){if(!qInit){qInit=true;qStart();}};
+
 /* ---------- nav ---------- */
 var st=document.getElementById('stage'),slides=[].slice.call(st.querySelectorAll('.slide')),i=0,vp=document.getElementById('vp'),prev=document.getElementById('prev'),next=document.getElementById('next'),count=document.getElementById('count');
 function fit(){var s=Math.min(vp.clientWidth/1280,vp.clientHeight/720);st.style.transform='translate(-50%,-50%) scale('+s+')';}
-function go(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach(function(el,j){el.classList.toggle('on',j===i);});count.textContent=(i<5?(i+1)+' / 5':'Dodatek '+'ABCD'[i-5]);prev.disabled=i===0;next.disabled=i===slides.length-1;}
+function go(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach(function(el,j){el.classList.toggle('on',j===i);});count.textContent=(i<5?(i+1)+' / 5':(i===slides.length-1?'Quiz':'Dodatek '+'ABCD'[i-5]));if(i===slides.length-1&&window.glancQuiz)window.glancQuiz();prev.disabled=i===0;next.disabled=i===slides.length-1;}
 prev.onclick=function(){go(i-1)};next.onclick=function(){go(i+1)};
 document.addEventListener('keydown',function(e){if(e.target&&e.target.type==='range')return;if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();go(i+1);}if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(i-1);}if(e.key==='Home')go(0);if(e.key==='End')go(slides.length-1);});
 var x0t=null;vp.addEventListener('touchstart',function(e){x0t=e.touches[0].clientX},{passive:true});
 vp.addEventListener('touchend',function(e){if(x0t===null||(e.target&&e.target.type==='range'))return;var dx=e.changedTouches[0].clientX-x0t;if(Math.abs(dx)>40)go(i+(dx<0?1:-1));x0t=null;});
+document.getElementById('quizbtn').onclick=function(){go(slides.length-1)};
 window.addEventListener('resize',fit);fit();go(0);
 })();
 </script>
