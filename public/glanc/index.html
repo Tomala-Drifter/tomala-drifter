@@ -1,0 +1,538 @@
+
+
+<!DOCTYPE html><html lang="pl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Glanc. – zestaw do płyty indukcyjnej</title><meta name="robots" content="noindex">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600&family=Archivo+Black&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: 1280x720 stage scaled to fit. Concept: the box is a black induction hob with one clean streak; mint = clean, yellow = estimate flag */
+:root{
+  --paper:#F2F6F4; --ink:#0F1A18; --accent:#0B8F6C; --mint:#3FE0B0; --mintSoft:#CDEFE3; --stain:#FFD84D;
+  --muted:#53635D; --line:#D2E0DA; --night:#0F1A18; --onNight:#EEF6F2; --nightMuted:#9FB8AF; --nightBar:#28403A; --nightGrid:#1C302B; --bad:#E0573A;
+  --display:"Archivo Black","Arial Black",system-ui,sans-serif;
+  --body:"Archivo","Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono",Consolas,monospace;
+  color-scheme:light;
+}
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);overflow:hidden;box-sizing:border-box;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0}
+.viewport{position:relative;height:calc(100% - 56px);width:100%}
+.stage{position:absolute;left:50%;top:50%;width:1280px;height:720px}
+.slide{position:absolute;inset:0;padding:56px 72px;box-sizing:border-box;background:var(--paper);border:1px solid var(--line);border-radius:6px;display:none;flex-direction:column;gap:22px}
+.slide.on{display:flex}
+.slide.dark{background:var(--night);color:var(--onNight);border-color:var(--night)}
+.eyebrow{font-family:var(--mono);font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);display:flex;gap:14px}
+.dark .eyebrow{color:var(--mint)}
+.eyebrow .app{color:var(--muted)}
+.dark .eyebrow .app{color:var(--nightMuted)}
+h1,h2{font-family:var(--display);font-weight:400;margin:0;text-wrap:balance;letter-spacing:-.01em}
+h2{font-size:40px;line-height:1.08}
+p{margin:0}
+.est{font-family:var(--mono);font-size:11px;letter-spacing:.08em;background:var(--stain);color:var(--ink);padding:2px 6px;border-radius:3px;vertical-align:middle;white-space:nowrap}
+.src{font-size:12.5px;color:var(--muted);margin-top:auto;line-height:1.4}
+.dark .src{color:var(--nightMuted)}
+.num{font-variant-numeric:tabular-nums}
+/* 1 */
+.s1{flex-direction:row;align-items:center;gap:40px}
+.s1 .copy{flex:1;display:flex;flex-direction:column;gap:20px;min-width:0}
+.s1 h1{font-size:132px;line-height:.9;color:var(--onNight)}
+.s1 h1 i{font-style:normal;color:var(--mint)}
+.s1 .lead{font-size:26px;line-height:1.3;max-width:24ch;font-weight:600}
+.names{font-size:16px;color:var(--nightMuted);display:flex;gap:12px;flex-wrap:wrap}
+.names b{color:var(--onNight)}
+.why{font-size:16px;line-height:1.45;max-width:52ch;color:var(--nightMuted)}
+.contents{display:flex;gap:8px;flex-wrap:wrap}
+.contents span{font-size:14px;border:1px solid #2F4943;border-radius:999px;padding:5px 12px;color:var(--onNight)}
+.packshot{width:560px;flex:none}
+/* 2 */
+.grid2{display:grid;grid-template-columns:1.15fr 1fr;gap:44px;flex:1;min-height:0}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:22px 32px;align-content:start}
+.fact .n{font-family:var(--display);font-size:44px;line-height:1;color:var(--accent)}
+.fact .t{font-size:16px;line-height:1.4;margin-top:6px}
+.reality{background:var(--ink);color:var(--onNight);border-radius:8px;padding:22px 24px;display:flex;flex-direction:column;gap:12px}
+.reality h3{font-family:var(--display);font-weight:400;font-size:22px;margin:0;color:var(--stain)}
+.reality table{border-collapse:collapse;font-size:15px;width:100%}
+.reality td{padding:6px 0;border-bottom:1px solid #26403A}
+.reality td:last-child{text-align:right;font-family:var(--mono)}
+.reality tr.us td{color:var(--mint);font-weight:600}
+.reality p{font-size:15px;line-height:1.45;color:var(--nightMuted)}
+/* 3 */
+.s3 .row{display:grid;grid-template-columns:1.5fr 1fr;gap:40px;flex:1;min-height:0}
+.chart text{font-family:var(--mono);font-size:12px;fill:var(--nightMuted)}
+.kpis{display:flex;gap:26px;font-size:14px;color:var(--nightMuted)}
+.kpis b{display:block;font-family:var(--display);font-weight:400;font-size:28px;color:var(--onNight)}
+.scen{border-collapse:collapse;width:100%;font-size:14px;color:var(--onNight)}
+.scen th{font-weight:400;text-align:right;color:var(--nightMuted);font-size:12px;padding:0 0 6px;white-space:nowrap}
+.scen th:first-child,.scen td:first-child{text-align:left}
+.scen td{padding:6px 0;border-top:1px solid #26403A;text-align:right;font-family:var(--mono);white-space:nowrap;color:var(--onNight)}
+.scen tr.base td{color:var(--mint)}
+.pnl{display:flex;flex-direction:column;gap:3px;font-size:13px;color:var(--onNight)}
+.pnl .r{display:grid;grid-template-columns:160px 1fr 40px;align-items:center;gap:10px}
+.pnl .bar{height:9px;border-radius:2px;background:var(--nightBar)}
+table{color:inherit;font-size:inherit}
+.pnl .r.profit{color:var(--stain);font-weight:600}
+.pnl .r.profit .bar{background:var(--stain)}
+.pnl .v{font-family:var(--mono);text-align:right}
+/* 4 */
+.s4 .row{display:grid;grid-template-columns:1fr 320px;gap:52px;flex:1;min-height:0}
+.beats{display:flex;flex-direction:column;gap:15px}
+.beat{display:grid;grid-template-columns:84px 1fr;gap:16px}
+.beat .sec{font-family:var(--mono);font-size:14px;color:var(--accent);padding-top:4px}
+.beat .what{font-size:18px;line-height:1.4}
+.beat .ost{display:inline-block;margin-top:6px;font-family:var(--display);font-size:23px;background:var(--ink);color:var(--paper);padding:4px 12px;border-radius:4px}
+.phone{border:10px solid var(--ink);border-radius:38px;background:#fff;height:100%;box-sizing:border-box;overflow:hidden;display:flex;flex-direction:column;font-size:14px;color:#1a1a1a}
+.phone .img{height:215px;background:#E6EEEA;position:relative;flex:none;display:flex;align-items:center;justify-content:center}
+.phone .img svg{width:100%;height:auto}
+.phone .tag{position:absolute;left:12px;top:12px;background:var(--stain);font-family:var(--mono);font-size:11px;padding:3px 7px;border-radius:3px}
+.phone .body{padding:12px 16px;display:flex;flex-direction:column;gap:7px;flex:1}
+.phone .price{font-family:var(--display);font-size:28px}
+.phone .meta{color:#666;font-size:13px;line-height:1.35}
+.phone .ship{background:var(--paper);padding:8px 10px;border-radius:6px;font-size:12.5px}
+.phone .cta{margin-top:auto;display:grid;grid-template-columns:1fr 1.3fr;gap:8px}
+.phone .cta span{text-align:center;padding:10px 0;border-radius:8px;font-weight:600}
+.phone .cta .a{border:1.5px solid #1a1a1a}
+.phone .cta .k{background:var(--ink);color:var(--mint)}
+/* 5 */
+.s5 h2{font-size:54px;max-width:22ch}
+.reasons{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;flex:1;align-content:start}
+.reason{border-top:3px solid var(--accent);padding-top:16px;display:flex;flex-direction:column;gap:10px}
+.reason b{font-family:var(--display);font-weight:400;font-size:23px;line-height:1.1}
+.reason p{font-size:16px;line-height:1.45;color:var(--muted)}
+.close{font-family:var(--display);font-size:28px;color:var(--accent)}
+/* appendix */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:40px;flex:1;min-height:0}
+.calc{display:grid;grid-template-columns:1fr 1fr;gap:12px 22px;align-content:start}
+.calc label{display:flex;flex-direction:column;gap:4px;font-size:13.5px;color:var(--muted)}
+.calc label span{display:flex;justify-content:space-between}
+.calc label b{font-family:var(--mono);color:var(--ink);font-weight:500}
+.calc input{accent-color:var(--accent);width:100%}
+.calc input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wf{display:flex;flex-direction:column;gap:5px;font-size:14px}
+.wf .r{display:grid;grid-template-columns:150px 1fr 70px;gap:10px;align-items:center}
+.wf .track{position:relative;height:16px}
+.wf .seg{position:absolute;top:0;height:16px;border-radius:2px;background:#9DB3AB}
+.wf .r.tot .seg{background:var(--ink)}
+.wf .r.cm .seg{background:var(--accent)}
+.wf .r.cm.neg .seg{background:var(--bad)}
+.wf .v{text-align:right;font-family:var(--mono)}
+.big{display:flex;gap:28px;margin-top:10px}
+.big div{font-size:13px;color:var(--muted)}
+.big b{display:block;font-family:var(--display);font-weight:400;font-size:30px;color:var(--ink)}
+table.t{border-collapse:collapse;width:100%;font-size:13.5px}
+table.t th{font-weight:600;text-align:right;color:var(--muted);font-size:12px;padding:0 6px 6px;border-bottom:1.5px solid var(--ink)}
+table.t td{text-align:right;padding:5px 6px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:12.5px}
+table.t th:first-child,table.t td:first-child{text-align:left;font-family:var(--body)}
+table.t tr.sum td{font-weight:600;border-top:1.5px solid var(--ink);border-bottom:none}
+table.t td.neg{color:var(--bad)}
+.dark table.t th{color:var(--nightMuted);border-color:var(--onNight)}
+.dark table.t td{border-color:#26403A}
+.list{display:flex;flex-direction:column;gap:12px;font-size:15.5px;line-height:1.4}
+.list div{display:grid;grid-template-columns:26px 1fr;gap:8px}
+.list .k{font-family:var(--mono);color:var(--accent);font-size:14px;padding-top:2px}
+.h3{font-family:var(--display);font-size:20px;margin:0 0 4px}
+nav{height:56px;display:flex;align-items:center;justify-content:center;gap:16px}
+nav button{font:600 15px var(--body);background:transparent;border:1.5px solid var(--ink);color:var(--ink);border-radius:999px;padding:8px 18px;cursor:pointer}
+nav button:hover{background:var(--ink);color:var(--paper)}
+nav button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+nav button:disabled{opacity:.3;cursor:default;background:transparent;color:var(--ink)}
+#count{font-family:var(--mono);font-size:14px;color:var(--muted);min-width:120px;text-align:center}
+@media (prefers-reduced-motion:no-preference){.shine{animation:sweep 3.2s ease-in-out 0.6s infinite}}
+@keyframes sweep{0%,55%{opacity:0;transform:translateX(-60px)}70%{opacity:1}100%{opacity:0;transform:translateX(120px)}}
+
+/* quiz */
+.qz{display:flex;flex-direction:column;gap:16px;flex:1;min-height:0}
+.qz .top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:14px;color:var(--muted)}
+.qz .bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.qz .bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+.qz .q{font-family:var(--display);font-size:32px;line-height:1.15;min-height:76px}
+.qz .opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.qz .opt{font:600 18px var(--body);text-align:left;background:#fff;border:1.5px solid var(--ink);color:var(--ink);border-radius:10px;padding:14px 16px;cursor:pointer;line-height:1.3}
+.qz .opt:hover:not(:disabled){background:var(--mintSoft)}
+.qz .opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.qz .opt.ok{background:var(--accent);border-color:var(--accent);color:#fff}
+.qz .opt.no{background:var(--bad);border-color:var(--bad);color:#fff}
+.qz .opt:disabled{cursor:default}
+.qz .fb{font-size:16px;line-height:1.45;min-height:46px;color:var(--ink)}
+.qz .act{display:flex;gap:12px;align-items:center}
+.qz .btn{font:600 16px var(--body);background:var(--ink);color:var(--paper);border:0;border-radius:999px;padding:10px 22px;cursor:pointer}
+.qz .btn.alt{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.qz .score{font-family:var(--display);font-size:72px;color:var(--accent);line-height:1}
+.qz .verdict{font-size:22px;line-height:1.35;max-width:40ch}
+</style>
+
+</head><body><div class="viewport" id="vp"><div class="stage" id="stage" style="transform: translate(-50%, -50%) scale(0.8875);">
+
+<section class="slide s1 dark on" aria-label="Slajd 1: nazwa i produkt">
+  <div class="copy">
+    <div class="eyebrow">Marka i produkt · chemia domowa</div>
+    <h1>Glanc<i>.</i></h1>
+    <p class="lead">Zestaw, który w minutę zdejmuje przypalony brud z płyty indukcyjnej i zostawia powłokę, przez którą kolejne mycie trwa 10 sekund. 79 zł.</p>
+    <div class="contents"><span>skrobak + 5 ostrzy</span><span>pasta do szkła 250 ml</span><span>Tarcza 50 ml</span><span>mikrofibra</span></div>
+    <div class="names">Rozważane: <b>Glanc ✓</b> <s>Szoruj</s> <s>Lśni</s></div>
+    <p class="why">„Na glanc” zna każdy Polak, a słowo samo opisuje efekt. Szoruj kojarzy się z harówką, której oszczędzamy klientowi, a Lśni jest nijakie. Przed startem trzeba sprawdzić znak w UPRP i EUIPO, bo działa już firma sprzątająca AM-GLANC, a w drogeriach jest GlanzMeister.</p>
+  </div>
+  <div class="packshot" id="pack1"><svg viewBox="0 0 560 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Wizualizacja zestawu Glanc: czarne pudełko jak płyta indukcyjna z jednym czystym pasem, tuba pasty, butelka Tarczy i skrobak"><defs><lineargradient id="gpack1f" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1F2B29"></stop><stop offset="1" stop-color="#0A1110"></stop></lineargradient><lineargradient id="gpack1t" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2C3B38"></stop><stop offset="1" stop-color="#18221F"></stop></lineargradient><lineargradient id="gpack1s" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffffff" stop-opacity="0"></stop><stop offset=".5" stop-color="#ffffff" stop-opacity=".55"></stop><stop offset="1" stop-color="#ffffff" stop-opacity="0"></stop></lineargradient><lineargradient id="gpack1m" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2FC99C"></stop><stop offset=".55" stop-color="#5BE8BE"></stop><stop offset="1" stop-color="#24A984"></stop></lineargradient><lineargradient id="gpack1b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E9EEF0"></stop><stop offset="1" stop-color="#9AA6AB"></stop></lineargradient><radialgradient id="gpack1sh" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#000" stop-opacity=".35"></stop><stop offset="1" stop-color="#000" stop-opacity="0"></stop></radialgradient><clippath id="gpack1c"><rect x="70" y="150" width="300" height="230" rx="6"></rect></clippath></defs><ellipse cx="290" cy="440" rx="250" ry="22" fill="url(#gpack1sh)"></ellipse><polygon points="70,150 370,150 410,118 110,118" fill="url(#gpack1t)"></polygon><polygon points="370,150 410,118 410,350 370,380" fill="#070C0B"></polygon><rect x="70" y="150" width="300" height="230" rx="6" fill="url(#gpack1f)"></rect><g clip-path="url(#gpack1c)"><circle cx="160" cy="300" r="62" fill="none" stroke="#2B3836" stroke-width="2"></circle><circle cx="160" cy="300" r="44" fill="none" stroke="#2B3836" stroke-width="1.5"></circle><circle cx="300" cy="215" r="44" fill="none" stroke="#2B3836" stroke-width="2"></circle><path d="M110 268c18-10 30 6 46-4s30 2 40 12" stroke="#5A4A3A" stroke-width="5" fill="none" stroke-linecap="round" opacity=".7"></path><path d="M120 330c14 6 26-6 40 2s28 2 36-6" stroke="#5A4A3A" stroke-width="4" fill="none" stroke-linecap="round" opacity=".55"></path><polygon points="205,150 265,150 175,380 115,380" fill="#050908"></polygon><polygon class="shine" points="228,150 240,150 150,380 138,380" fill="url(#gpack1s)"></polygon></g><text x="92" y="196" font-family="Archivo Black, Arial Black, sans-serif" font-size="46" fill="#EEF6F2">Glanc<tspan fill="#3FE0B0">.</tspan></text><text x="94" y="218" font-family="JetBrains Mono, Consolas, monospace" font-size="10.5" letter-spacing="1.6" fill="#9FB8AF">ZESTAW DO PŁYTY INDUKCYJNEJ</text><rect x="92" y="344" width="72" height="22" rx="11" fill="#FFD84D"></rect><text x="128" y="359" text-anchor="middle" font-family="JetBrains Mono, Consolas, monospace" font-size="11" fill="#0F1A18">4 W 1</text><text x="352" y="362" text-anchor="end" font-family="Archivo, Arial, sans-serif" font-size="11" fill="#9FB8AF">jeden ruch · na glanc</text><g transform="translate(418 120)"><path d="M6 0h62l-4 228c0 8-6 12-14 12H24c-8 0-14-4-14-12z" fill="url(#gpack1m)"></path><path d="M6 0h62v10H6z" fill="#1BA07C"></path><rect x="17" y="240" width="40" height="34" rx="5" fill="#0F1A18"></rect><text transform="translate(44 196) rotate(-90)" font-family="Archivo Black, Arial Black, sans-serif" font-size="25" fill="#0F1A18">Glanc</text><text transform="translate(58 198) rotate(-90)" font-family="JetBrains Mono, Consolas, monospace" font-size="8.5" fill="#0F1A18">PASTA DO SZKŁA · 250 ml</text></g><g transform="translate(470 250)"><rect x="8" y="0" width="22" height="26" rx="4" fill="#0F1A18"></rect><rect x="0" y="22" width="38" height="104" rx="9" fill="#EEF6F2" stroke="#C6D6CF"></rect><rect x="0" y="52" width="38" height="44" fill="#FFD84D"></rect><text x="19" y="72" text-anchor="middle" font-family="Archivo Black, Arial Black, sans-serif" font-size="9.5" fill="#0F1A18">TARCZA</text><text x="19" y="86" text-anchor="middle" font-family="JetBrains Mono, Consolas, monospace" font-size="8" fill="#0F1A18">50 ml</text></g><g transform="translate(150 372) rotate(-14)"><rect x="0" y="0" width="150" height="34" rx="17" fill="#0F1A18"></rect><rect x="14" y="12" width="70" height="10" rx="5" fill="#3FE0B0"></rect><path d="M150 4h18l34 -4v42l-34 -4h-18z" fill="#1F2B29"></path><path d="M202 -6h70v54h-70z" fill="url(#gpack1b)"></path><path d="M270 -6h4v54h-4z" fill="#FFFFFF"></path></g><path d="M246 96l7 20 20 7-20 7-7 20-7-20-20-7 20-7z" fill="#3FE0B0"></path><path d="M286 72l3 9 9 3-9 3-3 9-3-9-9-3 9-3z" fill="#FFD84D"></path></svg></div>
+</section>
+
+<section class="slide" aria-label="Slajd 2: co rośnie i dlaczego teraz">
+  <div class="eyebrow">Co rośnie i dlaczego teraz</div>
+  <h2>Sprzątanie sprzedaje się na TikToku przed/po. Samej pasty nie sprzedamy, ale gotowy zestaw do płyty tak.</h2>
+  <div class="grid2">
+    <div class="facts">
+      <div class="fact"><div class="n">Top 10</div><p class="t">myjka SEESE wśród najlepiej sprzedających się produktów TikTok Shop USA (II kw. 2026).</p></div>
+      <div class="fact"><div class="n">+200%</div><p class="t">wzrost kategorii dom i majsterkowanie na TikTok Shop w DE, FR, ES i IT (2026).</p></div>
+      <div class="fact"><div class="n">~70%</div><p class="t">sprzedaży TikTok Shop w Europie kontynentalnej przechodzi przez creatorów na prowizji.</p></div>
+      <div class="fact"><div class="n">15.06.26</div><p class="t">start TikTok Shop w Polsce. Platforma sama wskazuje sprzątanie jako kategorię do szybkiego wzrostu.</p></div>
+    </div>
+    <div class="reality">
+      <h3>Sprawdzenie cen: z czym naprawdę konkurujemy</h3>
+      <table>
+        <tbody><tr><td>The Pink Stuff, pasta 850 g (promocja, PL)</td><td>14,99 zł</td></tr>
+        <tr><td>Dr. Beckmann, spray do płyt 250 ml</td><td>16–25 zł</td></tr>
+        <tr><td>Skrobak + mikrofibra osobno (SZACUNEK)</td><td>~20 zł</td></tr>
+        <tr><td>Razem, jeśli klient skompletuje sam</td><td>~40–45 zł</td></tr>
+        <tr class="us"><td>Glanc, zestaw do płyty</td><td>79 zł</td></tr>
+      </tbody></table>
+      <p>Pasta to towar za 15 zł. Wnioski: nie walczymy ceną słoika, tylko sprzedajemy rozwiązanie jednego problemu (przypalona płyta) w jednym pudełku, z efektem do pokazania w 3 sekundy. Dopłata ok. 35 zł za wygodę i markę musi się obronić w teście z 200 zestawami.</p>
+    </div>
+  </div>
+  <p class="src">Źródła: FastMoss (USA II kw. 2026), Lengow/Kalodata (UE 2026), TikTok Newsroom PL (15.06.2026), PortalSpożywczy (16.10.2026), Pepper.pl (cena The Pink Stuff), Neonet, Gemini i MediaMarkt (Dr. Beckmann, XI 2026).</p>
+</section>
+
+<section class="slide s3 dark" aria-label="Slajd 3: droga do miliona">
+  <div class="eyebrow">Droga do pierwszego miliona · start styczeń 2027</div>
+  <h2 id="s3h">Milion zł sprzedaży w 12. miesiącu. Zostaje z niego ok. 68 tys. zł na czysto. <span class="est">SZACUNEK</span></h2>
+  <div class="row">
+    <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+      <svg class="chart" id="chart" viewBox="0 0 720 380" role="img" aria-label="Sprzedaż miesięczna brutto, scenariusz bazowy"><line x1="56" y1="330" x2="700" y2="330" style="stroke:var(--nightGrid)"></line><text x="48" y="334" text-anchor="end">0</text><line x1="56" y1="257.5" x2="700" y2="257.5" style="stroke:var(--nightGrid)"></line><text x="48" y="261.5" text-anchor="end">50k</text><line x1="56" y1="185" x2="700" y2="185" style="stroke:var(--nightGrid)"></line><text x="48" y="189" text-anchor="end">100k</text><line x1="56" y1="112.5" x2="700" y2="112.5" style="stroke:var(--nightGrid)"></line><text x="48" y="116.5" text-anchor="end">150k</text><line x1="56" y1="40" x2="700" y2="40" style="stroke:var(--nightGrid)"></line><text x="48" y="44" text-anchor="end">200k</text><rect x="68" y="304.24075" width="36" height="25.75925" style="fill:var(--nightBar)"></rect><text x="86" y="350" text-anchor="middle">sty</text><rect x="121" y="272.4205" width="36" height="57.5795" style="fill:var(--nightBar)"></rect><text x="139" y="350" text-anchor="middle">lut</text><rect x="174" y="208.78000000000003" width="36" height="121.21999999999998" style="fill:var(--mint)"></rect><text x="192" y="200.78000000000003" text-anchor="middle" style="fill:var(--onNight);font-size:13px">84k</text><text x="192" y="350" text-anchor="middle">mar</text><rect x="227" y="232.32365" width="36" height="97.67635" style="fill:var(--nightBar)"></rect><text x="245" y="350" text-anchor="middle">kwi</text><rect x="280" y="224.7619" width="36" height="105.2381" style="fill:var(--nightBar)"></rect><text x="298" y="350" text-anchor="middle">maj</text><rect x="333" y="215.4993" width="36" height="114.50070000000001" style="fill:var(--mint)"></rect><text x="351" y="207.4993" text-anchor="middle" style="fill:var(--onNight);font-size:13px">79k</text><text x="351" y="350" text-anchor="middle">cze</text><rect x="386" y="217.44375000000002" width="36" height="112.55624999999999" style="fill:var(--nightBar)"></rect><text x="404" y="350" text-anchor="middle">lip</text><rect x="439" y="205.6509" width="36" height="124.34909999999999" style="fill:var(--nightBar)"></rect><text x="457" y="350" text-anchor="middle">sie</text><rect x="492" y="184.56644999999997" width="36" height="145.43355000000003" style="fill:var(--nightBar)"></rect><text x="510" y="350" text-anchor="middle">wrz</text><rect x="545" y="164.38245" width="36" height="165.61755" style="fill:var(--nightBar)"></rect><text x="563" y="350" text-anchor="middle">paź</text><rect x="598" y="115.90895" width="36" height="214.09105" style="fill:var(--nightBar)"></rect><text x="616" y="350" text-anchor="middle">lis</text><rect x="651" y="85.3038" width="36" height="244.6962" style="fill:var(--stain)"></rect><text x="669" y="77.3038" text-anchor="middle" style="fill:var(--onNight);font-size:13px">169k</text><text x="669" y="350" text-anchor="middle">gru</text><text x="166" y="182.78000000000003" text-anchor="middle" style="fill:var(--mint)">Wielkanoc</text><text x="643" y="59.303799999999995" text-anchor="middle" style="fill:var(--stain)">1 mln łącznie</text><text x="380" y="374" text-anchor="middle">2027 · sprzedaż brutto miesięcznie, wszystkie kanały</text></svg>
+      <div class="kpis" id="kpis"><div><b>84 tys.</b>3. miesiąc (marzec)</div><div><b>79 tys.</b>6. miesiąc</div><div><b>169 tys.</b>12. miesiąc</div><div><b>104,5 zł</b>średni koszyk</div></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+      <table class="scen" id="scen"><tbody><tr><th>Scenariusz</th><th>Milion po</th><th>Sprzedaż 12 mies.</th><th>Zysk 12 mies.*</th></tr><tr><td style="font-family:var(--body)">Pesymistyczny</td><td>18 mies.</td><td>527 tys.</td><td>−26 tys.</td></tr><tr class="base"><td style="font-family:var(--body)">Bazowy</td><td>12 mies.</td><td>1054 tys.</td><td>68 tys.</td></tr><tr><td style="font-family:var(--body)">Optymistyczny</td><td>10 mies.</td><td>1687 tys.</td><td>189 tys.</td></tr></tbody></table>
+      <div style="font-size:13px;color:var(--nightMuted)" id="pnlh">Pesymistyczny: połowa zamówień, droższa reklama. Optymistyczny: 1,6× zamówień po filmie viralowym. *Zysk po kosztach startu, przed podatkiem dochodowym, bez pensji założycieli.<br><br>Gdzie idzie 1 054 288 zł brutto z 12 miesięcy (tys. zł):</div>
+      <div class="pnl" id="pnl"><div class="r"><span>VAT 23%</span><span class="bar" style="width:84%"></span><span class="v">197</span></div><div class="r"><span>Produkt (COGS)</span><span class="bar" style="width:100%"></span><span class="v">235</span></div><div class="r"><span>Reklama</span><span class="bar" style="width:50%"></span><span class="v">118</span></div><div class="r"><span>Wysyłka</span><span class="bar" style="width:43%"></span><span class="v">100</span></div><div class="r"><span>Creatorzy (afiliacja)</span><span class="bar" style="width:33%"></span><span class="v">78</span></div><div class="r"><span>Prowizje platform</span><span class="bar" style="width:29%"></span><span class="v">67</span></div><div class="r"><span>Pakowanie</span><span class="bar" style="width:27%"></span><span class="v">63</span></div><div class="r"><span>Koszty stałe</span><span class="bar" style="width:22%"></span><span class="v">52</span></div><div class="r"><span>Start (jednorazowe)</span><span class="bar" style="width:11%"></span><span class="v">26</span></div><div class="r"><span>Próbki dla creatorów</span><span class="bar" style="width:10%"></span><span class="v">23</span></div><div class="r"><span>Zwroty, płatności</span><span class="bar" style="width:11%"></span><span class="v">27</span></div><div class="r profit"><span>Czysty zysk</span><span class="bar" style="width:29%"></span><span class="v">68</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide s4" aria-label="Slajd 4: reklama">
+  <div class="eyebrow">Reklama · hak w 3 sekundy</div>
+  <h2>Najbrudniejsza rzecz w kuchni, jeden ruch skrobakiem i czyste czarne szkło.</h2>
+  <div class="row">
+    <div class="beats">
+      <div class="beat"><div class="sec">0,0–1,0 s</div><div class="what">Z góry: płyta indukcyjna z czarnymi, przypalonymi kręgami po mleku i cukrze.<br><span class="ost">Ta płyta miała iść na śmietnik.</span></div></div>
+      <div class="beat"><div class="sec">1,0–2,0 s</div><div class="what">Skrobak zdejmuje przypalony nalot jednym pasem. Słychać ten dźwięk.</div></div>
+      <div class="beat"><div class="sec">2,0–3,0 s</div><div class="what">Pasta i mikrofibra. Kadr podzielony na pół: brud i lustro.<br><span class="ost">Jeden ruch. Glanc.</span></div></div>
+      <div class="beat"><div class="sec">3–25 s</div><div class="what">Tarcza na czystą płytę, potem wykipiałe mleko schodzi jednym przetarciem. Na końcu pudełko i paczkomat. Zawsze #reklama i oznaczenie w aplikacji.</div></div>
+    </div>
+    <div class="phone" aria-label="Ekran sklepu: karta produktu Glanc">
+      <div class="img"><span class="tag">ZESTAW 4 W 1</span><div id="pack2" style="width:300px"><svg viewBox="0 0 560 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Wizualizacja zestawu Glanc: czarne pudełko jak płyta indukcyjna z jednym czystym pasem, tuba pasty, butelka Tarczy i skrobak"><defs><lineargradient id="gpack2f" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1F2B29"></stop><stop offset="1" stop-color="#0A1110"></stop></lineargradient><lineargradient id="gpack2t" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2C3B38"></stop><stop offset="1" stop-color="#18221F"></stop></lineargradient><lineargradient id="gpack2s" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffffff" stop-opacity="0"></stop><stop offset=".5" stop-color="#ffffff" stop-opacity=".55"></stop><stop offset="1" stop-color="#ffffff" stop-opacity="0"></stop></lineargradient><lineargradient id="gpack2m" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2FC99C"></stop><stop offset=".55" stop-color="#5BE8BE"></stop><stop offset="1" stop-color="#24A984"></stop></lineargradient><lineargradient id="gpack2b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E9EEF0"></stop><stop offset="1" stop-color="#9AA6AB"></stop></lineargradient><radialgradient id="gpack2sh" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#000" stop-opacity=".35"></stop><stop offset="1" stop-color="#000" stop-opacity="0"></stop></radialgradient><clippath id="gpack2c"><rect x="70" y="150" width="300" height="230" rx="6"></rect></clippath></defs><ellipse cx="290" cy="440" rx="250" ry="22" fill="url(#gpack2sh)"></ellipse><polygon points="70,150 370,150 410,118 110,118" fill="url(#gpack2t)"></polygon><polygon points="370,150 410,118 410,350 370,380" fill="#070C0B"></polygon><rect x="70" y="150" width="300" height="230" rx="6" fill="url(#gpack2f)"></rect><g clip-path="url(#gpack2c)"><circle cx="160" cy="300" r="62" fill="none" stroke="#2B3836" stroke-width="2"></circle><circle cx="160" cy="300" r="44" fill="none" stroke="#2B3836" stroke-width="1.5"></circle><circle cx="300" cy="215" r="44" fill="none" stroke="#2B3836" stroke-width="2"></circle><path d="M110 268c18-10 30 6 46-4s30 2 40 12" stroke="#5A4A3A" stroke-width="5" fill="none" stroke-linecap="round" opacity=".7"></path><path d="M120 330c14 6 26-6 40 2s28 2 36-6" stroke="#5A4A3A" stroke-width="4" fill="none" stroke-linecap="round" opacity=".55"></path><polygon points="205,150 265,150 175,380 115,380" fill="#050908"></polygon><polygon class="shine" points="228,150 240,150 150,380 138,380" fill="url(#gpack2s)"></polygon></g><text x="92" y="196" font-family="Archivo Black, Arial Black, sans-serif" font-size="46" fill="#EEF6F2">Glanc<tspan fill="#3FE0B0">.</tspan></text><text x="94" y="218" font-family="JetBrains Mono, Consolas, monospace" font-size="10.5" letter-spacing="1.6" fill="#9FB8AF">ZESTAW DO PŁYTY INDUKCYJNEJ</text><rect x="92" y="344" width="72" height="22" rx="11" fill="#FFD84D"></rect><text x="128" y="359" text-anchor="middle" font-family="JetBrains Mono, Consolas, monospace" font-size="11" fill="#0F1A18">4 W 1</text><text x="352" y="362" text-anchor="end" font-family="Archivo, Arial, sans-serif" font-size="11" fill="#9FB8AF">jeden ruch · na glanc</text><g transform="translate(418 120)"><path d="M6 0h62l-4 228c0 8-6 12-14 12H24c-8 0-14-4-14-12z" fill="url(#gpack2m)"></path><path d="M6 0h62v10H6z" fill="#1BA07C"></path><rect x="17" y="240" width="40" height="34" rx="5" fill="#0F1A18"></rect><text transform="translate(44 196) rotate(-90)" font-family="Archivo Black, Arial Black, sans-serif" font-size="25" fill="#0F1A18">Glanc</text><text transform="translate(58 198) rotate(-90)" font-family="JetBrains Mono, Consolas, monospace" font-size="8.5" fill="#0F1A18">PASTA DO SZKŁA · 250 ml</text></g><g transform="translate(470 250)"><rect x="8" y="0" width="22" height="26" rx="4" fill="#0F1A18"></rect><rect x="0" y="22" width="38" height="104" rx="9" fill="#EEF6F2" stroke="#C6D6CF"></rect><rect x="0" y="52" width="38" height="44" fill="#FFD84D"></rect><text x="19" y="72" text-anchor="middle" font-family="Archivo Black, Arial Black, sans-serif" font-size="9.5" fill="#0F1A18">TARCZA</text><text x="19" y="86" text-anchor="middle" font-family="JetBrains Mono, Consolas, monospace" font-size="8" fill="#0F1A18">50 ml</text></g><g transform="translate(150 372) rotate(-14)"><rect x="0" y="0" width="150" height="34" rx="17" fill="#0F1A18"></rect><rect x="14" y="12" width="70" height="10" rx="5" fill="#3FE0B0"></rect><path d="M150 4h18l34 -4v42l-34 -4h-18z" fill="#1F2B29"></path><path d="M202 -6h70v54h-70z" fill="url(#gpack2b)"></path><path d="M270 -6h4v54h-4z" fill="#FFFFFF"></path></g><path d="M246 96l7 20 20 7-20 7-7 20-7-20-20-7 20-7z" fill="#3FE0B0"></path><path d="M286 72l3 9 9 3-9 3-3 9-3-9-9-3 9-3z" fill="#FFD84D"></path></svg></div></div>
+      <div class="body">
+        <div style="font-weight:600;font-size:16px">Glanc · zestaw do płyty indukcyjnej</div>
+        <div class="meta">Skrobak + 5 ostrzy, pasta do szkła 250 ml, Tarcza 50 ml, mikrofibra.</div>
+        <div class="price">79 zł</div>
+        <div class="ship">Paczkomat InPost, wysyłka w 24 h · BLIK<br>Zestaw Kuchnia z pastą uniwersalną: 149 zł</div>
+        <div class="cta"><span class="a">Do koszyka</span><span class="k">Kup teraz</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide s5" aria-label="Slajd 5: dlaczego to kupisz">
+  <div class="eyebrow">Dlaczego to kupisz</div>
+  <h2>Bo masz płytę indukcyjną i wiesz, jak wygląda po wykipiałym mleku.</h2>
+  <div class="reasons">
+    <div class="reason"><b>Efekt w 3 sekundy</b><p>Widzisz go w filmie, zanim przewiniesz. Potem chcesz to samo zrobić u siebie.</p></div>
+    <div class="reason"><b>Wszystko w jednym pudełku</b><p>Nie szukasz skrobaka, pasty i ściereczki w trzech sklepach. Zestaw jest kompletny.</p></div>
+    <div class="reason"><b>Następne mycie: 10 s</b><p>Tarcza zostawia warstwę, z której brud schodzi jednym przetarciem. To jest powód, żeby wrócić po uzupełnienie.</p></div>
+    <div class="reason"><b>Jutro w paczkomacie</b><p>79 zł, BLIK w trzech kliknięciach. Na święta: zestaw Kuchnia za 149 zł.</p></div>
+  </div>
+  <p class="close">Glanc. Jeden ruch i masz na glanc.</p>
+</section>
+
+<section class="slide" aria-label="Dodatek A: ekonomika jednej paczki">
+  <div class="eyebrow">Dodatek A <span class="app">· ekonomika jednej paczki · kalkulator</span></div>
+  <h2>Na jednym zestawie za 79 zł sprzedanym przez creatora zostaje ok. 10 zł. Sprawdź sam.</h2>
+  <div class="two">
+    <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+      <div class="calc" id="calc"><label for="in-p"><span>Cena zestawu brutto <b id="o-p">79,00 zł</b></span><input type="range" id="in-p" min="49" max="149" step="1" value="79"></label><label for="in-c"><span>Koszt sztuki (COGS) <b id="o-c">16,00 zł</b></span><input type="range" id="in-c" min="8" max="35" step="0.5" value="16"></label><label for="in-fee"><span>Prowizja TikTok <b id="o-fee">9%</b></span><input type="range" id="in-fee" min="0" max="12" step="0.5" value="9"></label><label for="in-aff"><span>Prowizja creatora <b id="o-aff">15%</b></span><input type="range" id="in-aff" min="0" max="30" step="1" value="15"></label><label for="in-ads"><span>Reklama (% ceny) <b id="o-ads">5%</b></span><input type="range" id="in-ads" min="0" max="35" step="1" value="5"></label><label for="in-ship"><span>Wysyłka netto <b id="o-ship">8,86 zł</b></span><input type="range" id="in-ship" min="5" max="16" step="0.01" value="8.86"></label><label for="in-pack"><span>Pakowanie <b id="o-pack">6,00 zł</b></span><input type="range" id="in-pack" min="2" max="10" step="0.5" value="6"></label><label for="in-ret"><span>Zwroty i uszkodzenia <b id="o-ret">3%</b></span><input type="range" id="in-ret" min="0" max="10" step="0.5" value="3"></label></div>
+      <div class="big" id="big"><div><b style="color:var(--accent)">9,86 zł</b>zostaje na paczce</div><div><b>15%</b>ceny netto</div><div><b>5,72</b>ROAS, przy którym reklama wychodzi na zero</div></div>
+      <p class="src" style="margin-top:0">Ceny brutto, koszty netto. Prowizja TikTok 9% od ceny brutto (oficjalnie), VAT od prowizji odliczamy. Wysyłka platformowa od 8,86 zł netto, InPost firmowy A 14,55 zł. Koszt sztuki, pakowanie i zwroty to SZACUNEK.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+      <div class="wf" id="wf"><div class="r tot"><span>Cena netto</span><span class="track"><span class="seg" style="left:0px;width:280px"></span></span><span class="v">64,23</span></div><div class="r "><span>Koszt sztuki</span><span class="track"><span class="seg" style="left:210.24810126582278px;width:69.7518987341772px"></span></span><span class="v">−16,00</span></div><div class="r "><span>Prowizja TikTok</span><span class="track"><span class="seg" style="left:185.04810126582277px;width:25.2px"></span></span><span class="v">−5,78</span></div><div class="r "><span>Creator</span><span class="track"><span class="seg" style="left:133.38810126582277px;width:51.65999999999999px"></span></span><span class="v">−11,85</span></div><div class="r "><span>Reklama</span><span class="track"><span class="seg" style="left:116.16810126582278px;width:17.22px"></span></span><span class="v">−3,95</span></div><div class="r "><span>Wysyłka</span><span class="track"><span class="seg" style="left:77.54298734177216px;width:38.62511392405062px"></span></span><span class="v">−8,86</span></div><div class="r "><span>Pakowanie</span><span class="track"><span class="seg" style="left:51.38602531645571px;width:26.156962025316453px"></span></span><span class="v">−6,00</span></div><div class="r "><span>Zwroty</span><span class="track"><span class="seg" style="left:42.98602531645572px;width:8.399999999999999px"></span></span><span class="v">−1,93</span></div><div class="r cm"><span>Zostaje na paczce</span><span class="track"><span class="seg" style="left:0px;width:42.98602531645572px"></span></span><span class="v">9,86</span></div></div>
+      <table class="t" id="chtab"><tbody><tr><th>Zestaw 79 zł, w zł</th><th>TikTok creator</th><th>TikTok reklama/LIVE</th><th>Allegro</th><th>Sklep</th></tr><tr><td>Koszt sztuki</td><td>16,00</td><td>16,00</td><td>16,00</td><td>16,00</td></tr><tr><td>Prowizja platformy</td><td>5,78</td><td>5,78</td><td>6,59</td><td>0,00</td></tr><tr><td>Creator</td><td>11,85</td><td>0,00</td><td>0,00</td><td>0,00</td></tr><tr><td>Reklama</td><td>3,95</td><td>15,80</td><td>6,32</td><td>15,80</td></tr><tr><td>Wysyłka</td><td>8,86</td><td>8,86</td><td>7,59</td><td>14,55</td></tr><tr><td>Pakowanie</td><td>6,00</td><td>6,00</td><td>6,00</td><td>6,00</td></tr><tr><td>Zwroty, płatności</td><td>1,93</td><td>1,93</td><td>1,93</td><td>2,72</td></tr><tr class="sum"><td>Zostaje</td><td>9,86</td><td>9,86</td><td>19,80</td><td>9,16</td></tr></tbody></table>
+    </div>
+  </div>
+</section>
+
+<section class="slide" aria-label="Dodatek B: rachunek miesiąc po miesiącu">
+  <div class="eyebrow">Dodatek B <span class="app">· rachunek miesiąc po miesiącu · scenariusz bazowy</span></div>
+  <h2 id="bh">Plus od marca, milion w grudniu. Rok kończy się ok. 94 tys. zł zysku operacyjnego. <span class="est">SZACUNEK</span></h2>
+  <div style="overflow:auto;flex:1;min-height:0"><table class="t" id="mtab"><tbody><tr><th>Miesiąc</th><th>Zamówienia</th><th>w tym powroty</th><th>Sprzedaż brutto</th><th>Netto</th><th>Produkt</th><th>Platformy</th><th>Creatorzy</th><th>Reklama+próbki</th><th>Logistyka</th><th>Zwroty</th><th>Stałe</th><th>Zysk</th><th>Narastająco</th></tr><tr><td>sty</td><td>170</td><td>0</td><td>17 765</td><td>14 443</td><td>3936</td><td>1242</td><td>1599</td><td>5843</td><td>2564</td><td>442</td><td>5100</td><td class="neg">-6282</td><td>17 765</td></tr><tr><td>lut</td><td>380</td><td>0</td><td>39 710</td><td>32 285</td><td>8797</td><td>2776</td><td>3574</td><td>7709</td><td>5731</td><td>988</td><td>5100</td><td class="neg">-2390</td><td>57 475</td></tr><tr><td>mar</td><td>800</td><td>0</td><td>83 600</td><td>67 967</td><td>18 520</td><td>5844</td><td>7524</td><td>12 434</td><td>12 065</td><td>2081</td><td>5100</td><td>4400</td><td>141 075</td></tr><tr><td>kwi</td><td>647</td><td>7</td><td>67 363</td><td>54 767</td><td>14 935</td><td>4565</td><td>5518</td><td>9247</td><td>9848</td><td>1701</td><td>4100</td><td>4853</td><td>208 438</td></tr><tr><td>maj</td><td>702</td><td>22</td><td>72 578</td><td>59 007</td><td>16 116</td><td>4850</td><td>5862</td><td>9782</td><td>10 763</td><td>1842</td><td>4100</td><td>5691</td><td>281 016</td></tr><tr><td>cze</td><td>774</td><td>54</td><td>78 966</td><td>64 200</td><td>17 586</td><td>5135</td><td>6207</td><td>10 376</td><td>12 027</td><td>2023</td><td>4100</td><td>6746</td><td>359 982</td></tr><tr><td>lip</td><td>770</td><td>80</td><td>77 625</td><td>63 110</td><td>17 334</td><td>4849</td><td>5408</td><td>10 016</td><td>12 132</td><td>2021</td><td>4100</td><td>7250</td><td>437 607</td></tr><tr><td>sie</td><td>857</td><td>107</td><td>85 758</td><td>69 722</td><td>19 182</td><td>5271</td><td>5878</td><td>10 827</td><td>13 599</td><td>2244</td><td>4100</td><td>8621</td><td>523 365</td></tr><tr><td>wrz</td><td>1006</td><td>136</td><td>100 299</td><td>81 544</td><td>22 453</td><td>6114</td><td>6819</td><td>12 361</td><td>16 019</td><td>2631</td><td>4100</td><td>11 047</td><td>623 664</td></tr><tr><td>paź</td><td>1146</td><td>156</td><td>114 219</td><td>92 861</td><td>25 571</td><td>6958</td><td>7759</td><td>13 865</td><td>18 254</td><td>2997</td><td>4100</td><td>13 357</td><td>737 883</td></tr><tr><td>lis</td><td>1471</td><td>171</td><td>147 649</td><td>120 040</td><td>33 002</td><td>9136</td><td>10 189</td><td>17 623</td><td>23 275</td><td>3855</td><td>4100</td><td>18 860</td><td>885 532</td></tr><tr><td>gru</td><td>1674</td><td>174</td><td>168 756</td><td>137 200</td><td>37 683</td><td>10 542</td><td>11 756</td><td>20 024</td><td>26 376</td><td>4393</td><td>4100</td><td>22 325</td><td>1 054 288</td></tr><tr class="sum"><td>Razem</td><td>10 397</td><td>907</td><td>1 054 288</td><td>857 145</td><td>235 113</td><td>67 282</td><td>78 093</td><td>140 108</td><td>162 653</td><td>27 219</td><td>52 200</td><td>94 478</td><td></td></tr></tbody></table></div>
+  <p class="src" id="bnote">Kwoty w zł. Netto = sprzedaż bez VAT 23%. Koszty jednorazowe przed startem (26 000 zł: projekt marki, zgodność CLP, znak towarowy, zdjęcia, partia testowa, regulamin) odejmujemy osobno, stąd 94 478 − 26 000 = 68 478 zł. Mix kanałów: 60% creatorzy na starcie, od lipca 50% creatorzy, 22% reklama i LIVE, 18% Allegro, 10% sklep. Powroty: 5% klientów miesięcznie, 3–8 miesięcy po zakupie, kupuje uzupełnienie za 69 zł. Wszystko SZACUNEK.</p>
+</section>
+
+<section class="slide" aria-label="Dodatek C: czy to się serio sprzeda">
+  <div class="eyebrow">Dodatek C <span class="app">· czy to się serio sprzeda</span></div>
+  <h2>Tak, jeśli co miesiąc ok. 100 creatorów nagra 200–380 filmów. Najpierw sprawdzamy to tanio.</h2>
+  <div class="two">
+    <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+      <div class="h3">Lejek: co musi się wydarzyć na TikToku <span class="est">SZACUNEK</span></div>
+      <table class="t" id="ftab"><tbody><tr><th>Miesiąc</th><th>Sprzedaż TikTok</th><th>Wyświetlenia</th><th>Filmy</th><th>Aktywni creatorzy</th><th>Zamówienia dziennie</th></tr><tr><td>1. (sty)</td><td>16 tys. zł</td><td>0,6 mln</td><td>53</td><td>18</td><td>6</td></tr><tr><td>3. (mar)</td><td>75 tys. zł</td><td>3,0 mln</td><td>251</td><td>84</td><td>27</td></tr><tr><td>6. (cze)</td><td>60 tys. zł</td><td>2,4 mln</td><td>201</td><td>67</td><td>26</td></tr><tr><td>9. (wrz)</td><td>65 tys. zł</td><td>2,6 mln</td><td>218</td><td>73</td><td>34</td></tr><tr><td>12. (gru)</td><td>113 tys. zł</td><td>4,5 mln</td><td>376</td><td>125</td><td>56</td></tr></tbody></table>
+      <p class="src" style="margin-top:4px">Założenia: 25 zł sprzedaży na 1000 wyświetleń (GPM), średnio 12 tys. wyświetleń na film, 3 filmy na creatora miesięcznie. Najsłabszy punkt modelu to GPM: trzeba go zmierzyć w teście.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
+      <div class="h3">Test przed produkcją: 6 tygodni, ok. 9 tys. zł</div>
+      <div class="list">
+        <div><span class="k">1</span><span>200 zestawów z gotowych elementów: pasta white label od polskiego producenta, skrobaki z hurtowni, własna naklejka. Koszt ok. 4 tys. zł.</span></div>
+        <div><span class="k">2</span><span>100 próbek do creatorów od 5 do 50 tys. obserwujących. <b>Stop, jeśli publikuje mniej niż 25%.</b></span></div>
+        <div><span class="k">3</span><span>Po 4 tygodniach: <b>stop, jeśli żaden film nie przekroczył 50 tys. wyświetleń</b> albo GPM jest poniżej 15 zł.</span></div>
+        <div><span class="k">4</span><span>Po 300 zamówieniach: <b>stop, jeśli na paczce zostaje mniej niż 6 zł</b>. Wtedy zmieniamy cenę lub skład zestawu, zanim zamówimy własną pastę (MOQ ok. 3 tys. szt.).</span></div>
+        <div><span class="k">5</span><span>Równolegle: wynik wyszukiwania znaku Glanc w UPRP i EUIPO, etykiety CLP i karta charakterystyki pasty.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide dark" aria-label="Dodatek D: gotówka i ryzyka">
+  <div class="eyebrow">Dodatek D <span class="app">· gotówka i ryzyka</span></div>
+  <h2 id="dh">Potrzebujecie ok. 80 tys. zł gotówki, zanim biznes zacznie sam się finansować. <span class="est">SZACUNEK</span></h2>
+  <div class="two">
+    <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+      <svg class="chart" id="cash" viewBox="0 0 560 300" role="img" aria-label="Stan gotówki miesiąc po miesiącu"><line x1="60" y1="60" x2="540" y2="60" style="stroke:var(--nightGrid)"></line><text x="52" y="64" text-anchor="end">0</text><line x1="60" y1="110" x2="540" y2="110" style="stroke:var(--nightGrid)"></line><text x="52" y="114" text-anchor="end">−25k</text><line x1="60" y1="160" x2="540" y2="160" style="stroke:var(--nightGrid)"></line><text x="52" y="164" text-anchor="end">−50k</text><line x1="60" y1="210" x2="540" y2="210" style="stroke:var(--nightGrid)"></line><text x="52" y="214" text-anchor="end">−75k</text><line x1="60" y1="260" x2="540" y2="260" style="stroke:var(--nightGrid)"></line><text x="52" y="264" text-anchor="end">−100k</text><polyline points="70,128.668 107,172.2325424796748 144,207.14668353658536 181,220.90459410569107 218,204.46992812195123 255,199.16710152032525 292,191.17388324390248 329,182.76920460975612 366,180.47610851219514 403,181.50781163414635 440,183.3906500731707 477,176.77528178048775 514,145.852478203252" style="fill:none;stroke:var(--mint);stroke-width:3"></polyline><circle cx="70" cy="128.668" r="3.5" style="fill:var(--mint)"></circle><text x="70" y="286" text-anchor="middle">start</text><circle cx="107" cy="172.2325424796748" r="3.5" style="fill:var(--mint)"></circle><text x="107" y="286" text-anchor="middle">1</text><circle cx="144" cy="207.14668353658536" r="3.5" style="fill:var(--mint)"></circle><text x="144" y="286" text-anchor="middle">2</text><circle cx="181" cy="220.90459410569107" r="6" style="fill:var(--stain)"></circle><text x="181" y="286" text-anchor="middle">3</text><circle cx="218" cy="204.46992812195123" r="3.5" style="fill:var(--mint)"></circle><text x="218" y="286" text-anchor="middle">4</text><circle cx="255" cy="199.16710152032525" r="3.5" style="fill:var(--mint)"></circle><text x="255" y="286" text-anchor="middle">5</text><circle cx="292" cy="191.17388324390248" r="3.5" style="fill:var(--mint)"></circle><text x="292" y="286" text-anchor="middle">6</text><circle cx="329" cy="182.76920460975612" r="3.5" style="fill:var(--mint)"></circle><text x="329" y="286" text-anchor="middle">7</text><circle cx="366" cy="180.47610851219514" r="3.5" style="fill:var(--mint)"></circle><text x="366" y="286" text-anchor="middle">8</text><circle cx="403" cy="181.50781163414635" r="3.5" style="fill:var(--mint)"></circle><text x="403" y="286" text-anchor="middle">9</text><circle cx="440" cy="183.3906500731707" r="3.5" style="fill:var(--mint)"></circle><text x="440" y="286" text-anchor="middle">10</text><circle cx="477" cy="176.77528178048775" r="3.5" style="fill:var(--mint)"></circle><text x="477" y="286" text-anchor="middle">11</text><circle cx="514" cy="145.852478203252" r="3.5" style="fill:var(--mint)"></circle><text x="514" y="286" text-anchor="middle">12</text><text x="181" y="244.90459410569107" text-anchor="middle" style="fill:var(--stain);font-size:13px">-80 tys. zł</text></svg>
+      <p class="src" style="margin-top:0" id="cnote">Stan konta narastająco, w zł. Start: koszty jednorazowe i pierwszy zapas. Towar kupujemy 1,5 miesiąca do przodu, platformy wypłacają ok. 40% sprzedaży z miesięcznym opóźnieniem. Najgłębiej jest przed Wielkanocą, bo wtedy kupujemy towar na szczyt. W wariancie 20 tys. zł trzeba zacząć od testu z Dodatku C i finansować wzrost z zysku albo kredytem kupieckim u producenta.</p>
+    </div>
+    <div class="list" style="color:var(--onNight)">
+      <div><span class="k" style="color:var(--stain)">!</span><span><b>Towar za 15 zł obok nas.</b> Jeśli klienci nie zapłacą 79 zł za zestaw, cały model się sypie. Mitigacja: test 200 zestawów, cena 69 zł jako plan B.</span></div>
+      <div><span class="k" style="color:var(--stain)">!</span><span><b>Cienka marża, ok. 7–9%.</b> Każde 3 pkt proc. więcej dla creatorów albo na reklamę zjada połowę zysku. Pilnujemy zestawów 119 i 149 zł.</span></div>
+      <div><span class="k" style="color:var(--stain)">!</span><span><b>Płyny w paczce.</b> Wyciek = zwrot. Tuba zamiast butelki, folia termokurczliwa, karton z przegrodą.</span></div>
+      <div><span class="k" style="color:var(--stain)">!</span><span><b>Zależność od TikToka.</b> Ok. 80% sprzedaży z jednej platformy. Od 4. miesiąca budujemy Allegro i bazę SMS.</span></div>
+      <div><span class="k" style="color:var(--stain)">!</span><span><b>Kopie.</b> Skrobak i pasta są łatwe do skopiowania. Chroni nas marka, Tarcza i szybkość, nie patent.</span></div>
+      <div><span class="k" style="color:var(--stain)">+</span><span><b>Dźwignie:</b> <span id="lev">prowizja 5% dla artykułów domowych (niepotwierdzona w PL) dałaby +25 tys. zł rocznie, prowizja dla creatorów 12% zamiast 15% +16 tys. zł, a każde 10% zamówień przesunięte na zestaw 149 zł podnosi średni koszyk o ok. 7 zł.</span></span></div>
+    </div>
+  </div>
+</section>
+
+
+<section class="slide" aria-label="Quiz o Glanc">
+  <div class="eyebrow">Quiz <span class="app">· losowe 5 pytań o Glanc</span></div>
+  <h2>Ile naprawdę wiesz o Glancu?</h2>
+  <div class="qz" id="qz"></div>
+</section>
+
+</div></div>
+<nav>
+  <button id="prev" type="button" aria-label="Poprzedni slajd" disabled="">← Wstecz</button>
+  <span id="count" aria-live="polite">1 / 5</span>
+  <button id="quizbtn" type="button">Quiz</button>
+  <button id="next" type="button" aria-label="Następny slajd">Dalej →</button>
+</nav>
+
+<script>
+var M={"rows": [{"m": 1, "mon": "sty", "first": 170, "rep": 0, "orders": 170, "gross": 17765.0, "net": 14443.08943089431, "vat": 3321.9105691056902, "cogs": 3935.5000000000005, "fee": 1241.7947154471547, "aff": 1598.85, "ads": 2114.035, "ship": 1543.77, "pack": 1020.0, "pay": 8.8825, "ret": 433.29268292682934, "seed": 3729.0, "fixed": 5100, "contrib": 2546.9645325203255, "profit": -6282.0354674796745, "cumgross": 17765.0, "tt_gmv": 15988.5, "views": 639540.0, "videos": 53.295}, {"m": 2, "mon": "lut", "first": 380, "rep": 0, "orders": 380, "gross": 39710.0, "net": 32284.552845528466, "vat": 7425.447154471534, "cogs": 8797.0, "fee": 2775.7764227642274, "aff": 3573.8999999999996, "ads": 4725.49, "ship": 3450.78, "pack": 2280.0, "pay": 19.855, "ret": 968.5365853658536, "seed": 2983.2, "fixed": 5100, "contrib": 5693.214837398384, "profit": -2389.985162601616, "cumgross": 57475.0, "tt_gmv": 35739.0, "views": 1429560.0, "videos": 119.13}, {"m": 3, "mon": "mar", "first": 800, "rep": 0, "orders": 800, "gross": 83600.0, "net": 67967.47967479673, "vat": 15632.520325203266, "cogs": 18520.0, "fee": 5843.739837398373, "aff": 7524.0, "ads": 9948.400000000001, "ship": 7264.799999999998, "pack": 4800.0, "pay": 41.800000000000004, "ret": 2039.0243902439026, "seed": 2486.0, "fixed": 5100, "contrib": 11985.715447154456, "profit": 4399.715447154456, "cumgross": 141075.0, "tt_gmv": 75240.0, "views": 3009600.0, "videos": 250.8}, {"m": 4, "mon": "kwi", "first": 640, "rep": 7, "orders": 647, "gross": 67363.0, "net": 54766.66666666668, "vat": 12596.333333333321, "cogs": 14935.0, "fee": 4564.60487804878, "aff": 5517.6, "ads": 7755.478000000001, "ship": 5966.042, "pack": 3882.0, "pay": 58.334, "ret": 1642.9999999999998, "seed": 1491.6, "fixed": 4100, "contrib": 10444.607788617897, "profit": 4853.007788617897, "cumgross": 208438.0, "tt_gmv": 53504.0, "views": 2140160.0, "videos": 178.34666666666666}, {"m": 5, "mon": "maj", "first": 680, "rep": 22, "orders": 702, "gross": 72578.0, "net": 59006.50406504065, "vat": 13571.495934959348, "cogs": 16116.000000000002, "fee": 4849.892682926829, "aff": 5862.450000000001, "ads": 8290.436, "ship": 6550.804000000001, "pack": 4212.000000000001, "pay": 72.028, "ret": 1770.19512195122, "seed": 1491.6, "fixed": 4100, "contrib": 11282.6982601626, "profit": 5691.0982601626, "cumgross": 281016.0, "tt_gmv": 56848.00000000001, "views": 2273920.0, "videos": 189.49333333333334}, {"m": 6, "mon": "cze", "first": 720, "rep": 54, "orders": 774, "gross": 78966.00000000001, "net": 64200.00000000001, "vat": 14766.000000000007, "cogs": 17586.0, "fee": 5135.180487804878, "aff": 6207.300000000001, "ads": 8884.044, "ship": 7382.916000000002, "pack": 4644.0, "pay": 97.45200000000001, "ret": 1926.0, "seed": 1491.6, "fixed": 4100, "contrib": 12337.107512195129, "profit": 6745.507512195129, "cumgross": 359982.0, "tt_gmv": 60192.00000000001, "views": 2407680.0000000005, "videos": 200.64000000000004}, {"m": 7, "mon": "lip", "first": 690, "rep": 80, "orders": 770, "gross": 77625.0, "net": 63109.75609756098, "vat": 14515.243902439019, "cogs": 17333.5, "fee": 4849.3536585365855, "aff": 5407.875, "ads": 8524.812000000002, "ship": 7512.275999999999, "pack": 4620.0, "pay": 127.305, "ret": 1893.2926829268295, "seed": 1491.6, "fixed": 4100, "contrib": 12841.341756097565, "profit": 7249.741756097565, "cumgross": 437607.0, "tt_gmv": 51915.600000000006, "views": 2076624.0000000002, "videos": 173.05200000000002}, {"m": 8, "mon": "sie", "first": 750, "rep": 107, "orders": 857, "gross": 85758.0, "net": 69721.9512195122, "vat": 16036.048780487807, "cogs": 19181.5, "fee": 5271.036585365854, "aff": 5878.125, "ads": 9335.25, "ship": 8457.150000000001, "pack": 5142.0, "pay": 152.205, "ret": 2091.658536585366, "seed": 1491.6, "fixed": 4100, "contrib": 14213.02609756097, "profit": 8621.42609756097, "cumgross": 523365.0, "tt_gmv": 56430.0, "views": 2257200.0, "videos": 188.1}, {"m": 9, "mon": "wrz", "first": 870, "rep": 136, "orders": 1006, "gross": 100299.00000000001, "net": 81543.9024390244, "vat": 18755.097560975613, "cogs": 22452.5, "fee": 6114.402439024389, "aff": 6818.625, "ads": 10869.876000000002, "ship": 9983.148, "pack": 6035.999999999999, "pay": 184.755, "ret": 2446.317073170732, "seed": 1491.6, "fixed": 4100, "contrib": 16638.278926829276, "profit": 11046.678926829276, "cumgross": 623664.0, "tt_gmv": 65458.8, "views": 2618352.0000000005, "videos": 218.19600000000003}, {"m": 10, "mon": "paź", "first": 990, "rep": 156, "orders": 1146, "gross": 114219.0, "net": 92860.97560975612, "vat": 21358.02439024388, "cogs": 25570.5, "fee": 6957.768292682927, "aff": 7759.125, "ads": 12373.452, "ship": 11378.196, "pack": 6876.000000000001, "pay": 211.09500000000003, "ret": 2785.8292682926826, "seed": 1491.6, "fixed": 4100, "contrib": 18949.010048780503, "profit": 13357.410048780504, "cumgross": 737883.0, "tt_gmv": 74487.6, "views": 2979504.0000000005, "videos": 248.29200000000003}, {"m": 11, "mon": "lis", "first": 1300, "rep": 171, "orders": 1471, "gross": 147649.0, "net": 120039.837398374, "vat": 27609.162601625998, "cogs": 33002.0, "fee": 9136.463414634147, "aff": 10188.75, "ads": 16131.19, "ship": 14448.57, "pack": 8826.0, "pay": 253.84, "ret": 3601.1951219512202, "seed": 1491.6, "fixed": 4100, "contrib": 24451.82886178863, "profit": 18860.22886178863, "cumgross": 885532.0, "tt_gmv": 97812.0, "views": 3912480.0, "videos": 326.04}, {"m": 12, "mon": "gru", "first": 1500, "rep": 174, "orders": 1674, "gross": 168756.0, "net": 137200.0, "vat": 31556.0, "cogs": 37683.0, "fee": 10542.073170731708, "aff": 11756.25, "ads": 18532.5, "ship": 16332.300000000003, "pack": 10044.0, "pay": 276.81, "ret": 4116.000000000001, "seed": 1491.6, "fixed": 4100, "contrib": 27917.066829268282, "profit": 22325.466829268284, "cumgross": 1054288.0, "tt_gmv": 112860.0, "views": 4514400.0, "videos": 376.2}], "sum": {"gross": 1054288.0, "net": 857144.7154471546, "vat": 197143.2845528455, "cogs": 235112.5, "fee": 67282.08658536585, "aff": 78092.85, "ads": 117484.963, "ship": 100270.75200000001, "pack": 62382.0, "pay": 1504.3615, "ret": 25714.341463414636, "seed": 22622.6, "fixed": 52200, "profit": 94478.26089837402, "first": 9490, "rep": 907, "orders": 10397, "profit_after_oneoff": 68478.26089837402}, "hit": 12, "AOV": 104.5, "one_off": 26000, "scen": [{"n": "Pesymistyczny", "hit": 18, "gross": 527109.5, "profit": -25612.791867886157, "base": false}, {"n": "Bazowy", "hit": 12, "gross": 1054288.0, "profit": 68478.26089837402, "base": true}, {"n": "Optymistyczny", "hit": 10, "gross": 1686709.0, "profit": 188899.3032422764, "base": false}], "pnl": [["VAT 23%", 197], ["Produkt (COGS)", 235], ["Reklama", 118], ["Wysyłka", 100], ["Creatorzy (afiliacja)", 78], ["Prowizje platform", 67], ["Pakowanie", 63], ["Koszty stałe", 52], ["Start (jednorazowe)", 26], ["Próbki dla creatorów", 23], ["Zwroty, płatności", 27], ["Czysty zysk", 68]], "ue": [{"p": 79, "net": 64.22764227642277, "cogs": 16.0, "fee": 5.780487804878049, "aff": 11.85, "ads": 3.95, "ship": 8.86, "pack": 6.0, "pay": 0.0, "ret": 1.926829268292683, "cm": 9.860325203252039}, {"p": 79, "net": 64.22764227642277, "cogs": 16.0, "fee": 5.780487804878049, "aff": 0.0, "ads": 15.8, "ship": 8.86, "pack": 6.0, "pay": 0.0, "ret": 1.926829268292683, "cm": 9.860325203252039}, {"p": 79, "net": 64.22764227642277, "cogs": 16.0, "fee": 6.59349593495935, "aff": 0.0, "ads": 6.32, "ship": 7.59, "pack": 6.0, "pay": 0.0, "ret": 1.926829268292683, "cm": 19.79731707317074}, {"p": 79, "net": 64.22764227642277, "cogs": 16.0, "fee": 0.0, "aff": 0.0, "ads": 15.8, "ship": 14.55, "pack": 6.0, "pay": 0.79, "ret": 1.926829268292683, "cm": 9.160813008130084}], "trail": [-34334.0, -56116.2712398374, -73573.34176829268, -80452.29705284553, -72234.96406097562, -69583.55076016262, -65586.94162195123, -61384.602304878055, -60238.05425609756, -60753.90581707317, -61695.325036585346, -58387.64089024387, -42926.23910162599], "levers": {"fee5": 24600.8292682927, "aff12": 15618.570000000022}};
+(function(){
+var E=' <span class="est">SZACUNEK</span>';
+function zl(x){return Math.round(x).toLocaleString('pl-PL').replace(/ /g,' ');}
+function k(x){return Math.round(x/1000).toLocaleString('pl-PL');}
+function z2(x){return x.toFixed(2).replace('.',',');}
+
+/* ---------- packshot ---------- */
+function pack(id,small){
+  var s='<svg viewBox="0 0 560 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Wizualizacja zestawu Glanc: czarne pudełko jak płyta indukcyjna z jednym czystym pasem, tuba pasty, butelka Tarczy i skrobak">'+
+  '<defs>'+
+   '<linearGradient id="g'+id+'f" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1F2B29"/><stop offset="1" stop-color="#0A1110"/></linearGradient>'+
+   '<linearGradient id="g'+id+'t" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2C3B38"/><stop offset="1" stop-color="#18221F"/></linearGradient>'+
+   '<linearGradient id="g'+id+'s" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffffff" stop-opacity="0"/><stop offset=".5" stop-color="#ffffff" stop-opacity=".55"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>'+
+   '<linearGradient id="g'+id+'m" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2FC99C"/><stop offset=".55" stop-color="#5BE8BE"/><stop offset="1" stop-color="#24A984"/></linearGradient>'+
+   '<linearGradient id="g'+id+'b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E9EEF0"/><stop offset="1" stop-color="#9AA6AB"/></linearGradient>'+
+   '<radialGradient id="g'+id+'sh" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#000" stop-opacity=".35"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>'+
+   '<clipPath id="g'+id+'c"><rect x="70" y="150" width="300" height="230" rx="6"/></clipPath>'+
+  '</defs>'+
+  '<ellipse cx="290" cy="440" rx="250" ry="22" fill="url(#g'+id+'sh)"/>'+
+  /* box: top + side + front */
+  '<polygon points="70,150 370,150 410,118 110,118" fill="url(#g'+id+'t)"/>'+
+  '<polygon points="370,150 410,118 410,350 370,380" fill="#070C0B"/>'+
+  '<rect x="70" y="150" width="300" height="230" rx="6" fill="url(#g'+id+'f)"/>'+
+  '<g clip-path="url(#g'+id+'c)">'+
+    /* induction rings, "burnt" on the left */
+    '<circle cx="160" cy="300" r="62" fill="none" stroke="#2B3836" stroke-width="2"/><circle cx="160" cy="300" r="44" fill="none" stroke="#2B3836" stroke-width="1.5"/>'+
+    '<circle cx="300" cy="215" r="44" fill="none" stroke="#2B3836" stroke-width="2"/>'+
+    '<path d="M110 268c18-10 30 6 46-4s30 2 40 12" stroke="#5A4A3A" stroke-width="5" fill="none" stroke-linecap="round" opacity=".7"/>'+
+    '<path d="M120 330c14 6 26-6 40 2s28 2 36-6" stroke="#5A4A3A" stroke-width="4" fill="none" stroke-linecap="round" opacity=".55"/>'+
+    /* the clean streak */
+    '<polygon points="205,150 265,150 175,380 115,380" fill="#050908"/>'+
+    '<polygon class="shine" points="228,150 240,150 150,380 138,380" fill="url(#g'+id+'s)"/>'+
+  '</g>'+
+  '<text x="92" y="196" font-family="Archivo Black, Arial Black, sans-serif" font-size="46" fill="#EEF6F2">Glanc<tspan fill="#3FE0B0">.</tspan></text>'+
+  '<text x="94" y="218" font-family="JetBrains Mono, Consolas, monospace" font-size="10.5" letter-spacing="1.6" fill="#9FB8AF">ZESTAW DO PŁYTY INDUKCYJNEJ</text>'+
+  '<rect x="92" y="344" width="72" height="22" rx="11" fill="#FFD84D"/><text x="128" y="359" text-anchor="middle" font-family="JetBrains Mono, Consolas, monospace" font-size="11" fill="#0F1A18">4 W 1</text>'+
+  '<text x="352" y="362" text-anchor="end" font-family="Archivo, Arial, sans-serif" font-size="11" fill="#9FB8AF">jeden ruch · na glanc</text>'+
+  /* tube */
+  '<g transform="translate(418 120)">'+
+    '<path d="M6 0h62l-4 228c0 8-6 12-14 12H24c-8 0-14-4-14-12z" fill="url(#g'+id+'m)"/>'+
+    '<path d="M6 0h62v10H6z" fill="#1BA07C"/>'+
+    '<rect x="17" y="240" width="40" height="34" rx="5" fill="#0F1A18"/>'+
+    '<text transform="translate(44 196) rotate(-90)" font-family="Archivo Black, Arial Black, sans-serif" font-size="25" fill="#0F1A18">Glanc</text>'+
+    '<text transform="translate(58 198) rotate(-90)" font-family="JetBrains Mono, Consolas, monospace" font-size="8.5" fill="#0F1A18">PASTA DO SZKŁA · 250 ml</text>'+
+  '</g>'+
+  /* Tarcza bottle */
+  '<g transform="translate(470 250)">'+
+    '<rect x="8" y="0" width="22" height="26" rx="4" fill="#0F1A18"/>'+
+    '<rect x="0" y="22" width="38" height="104" rx="9" fill="#EEF6F2" stroke="#C6D6CF"/>'+
+    '<rect x="0" y="52" width="38" height="44" fill="#FFD84D"/>'+
+    '<text x="19" y="72" text-anchor="middle" font-family="Archivo Black, Arial Black, sans-serif" font-size="9.5" fill="#0F1A18">TARCZA</text>'+
+    '<text x="19" y="86" text-anchor="middle" font-family="JetBrains Mono, Consolas, monospace" font-size="8" fill="#0F1A18">50 ml</text>'+
+  '</g>'+
+  /* scraper in front */
+  '<g transform="translate(150 372) rotate(-14)">'+
+    '<rect x="0" y="0" width="150" height="34" rx="17" fill="#0F1A18"/>'+
+    '<rect x="14" y="12" width="70" height="10" rx="5" fill="#3FE0B0"/>'+
+    '<path d="M150 4h18l34 -4v42l-34 -4h-18z" fill="#1F2B29"/>'+
+    '<path d="M202 -6h70v54h-70z" fill="url(#g'+id+'b)"/>'+
+    '<path d="M270 -6h4v54h-4z" fill="#FFFFFF"/>'+
+  '</g>'+
+  /* sparkle */
+  '<path d="M246 96l7 20 20 7-20 7-7 20-7-20-20-7 20-7z" fill="#3FE0B0"/>'+
+  '<path d="M286 72l3 9 9 3-9 3-3 9-3-9-9-3 9-3z" fill="#FFD84D"/>'+
+  '</svg>';
+  document.getElementById(id).innerHTML=s;
+}
+pack('pack1');pack('pack2');
+
+/* ---------- slide 3 ---------- */
+var R=M.rows,S=M.sum,hit=M.hit;
+document.getElementById('s3h').innerHTML='Milion zł sprzedaży w '+hit+'. miesiącu. Zostaje z niego ok. '+k(S.profit_after_oneoff)+' tys. zł na czysto.'+E;
+var c='',mx=200;
+[0,50,100,150,200].forEach(function(g){var y=330-g*1.45;c+='<line x1="56" y1="'+y+'" x2="700" y2="'+y+'" style="stroke:var(--nightGrid)"/><text x="48" y="'+(y+4)+'" text-anchor="end">'+(g?g+'k':'0')+'</text>';});
+R.forEach(function(r,i){var v=r.gross/1000,h=v*1.45,x=60+i*53,hi=(i===2||i===5||i===11);
+  var col=(i+1===hit)?'var(--stain)':(hi?'var(--mint)':'var(--nightBar)');
+  c+='<rect x="'+(x+8)+'" y="'+(330-h)+'" width="36" height="'+h+'" style="fill:'+col+'"/>';
+  if(hi||i+1===hit)c+='<text x="'+(x+26)+'" y="'+(322-h)+'" text-anchor="middle" style="fill:var(--onNight);font-size:13px">'+Math.round(v)+'k</text>';
+  c+='<text x="'+(x+26)+'" y="350" text-anchor="middle">'+r.mon+'</text>';});
+c+='<text x="166" y="'+(330-R[2].gross/1000*1.45-26)+'" text-anchor="middle" style="fill:var(--mint)">Wielkanoc</text>';
+c+='<text x="643" y="'+(330-R[11].gross/1000*1.45-26)+'" text-anchor="middle" style="fill:var(--stain)">1 mln łącznie</text>';
+c+='<text x="380" y="374" text-anchor="middle">2027 · sprzedaż brutto miesięcznie, wszystkie kanały</text>';
+document.getElementById('chart').innerHTML=c;
+document.getElementById('kpis').innerHTML=[[R[2].gross,'3. miesiąc (marzec)'],[R[5].gross,'6. miesiąc'],[R[11].gross,'12. miesiąc'],[null,'średni koszyk']].map(function(a){return '<div><b>'+(a[0]===null?z2(M.AOV).replace(',50',',5')+' zł':k(a[0])+' tys.')+'</b>'+a[1]+'</div>';}).join('');
+document.getElementById('scen').innerHTML='<tr><th>Scenariusz</th><th>Milion po</th><th>Sprzedaż 12 mies.</th><th>Zysk 12 mies.*</th></tr>'+
+ M.scen.map(function(s){return '<tr'+(s.base?' class="base"':'')+'><td style="font-family:var(--body)">'+s.n+'</td><td>'+s.hit+' mies.</td><td>'+k(s.gross)+' tys.</td><td>'+(s.profit<0?'−':'')+k(Math.abs(s.profit))+' tys.</td></tr>';}).join('');
+var P=M.pnl, pm=Math.max.apply(null,P.map(function(p){return p[1];}));
+document.getElementById('pnlh').innerHTML='Pesymistyczny: połowa zamówień, droższa reklama. Optymistyczny: 1,6× zamówień po filmie viralowym. *Zysk po kosztach startu, przed podatkiem dochodowym, bez pensji założycieli.<br><br>Gdzie idzie '+zl(S.gross)+' zł brutto z 12 miesięcy (tys. zł):';
+document.getElementById('pnl').innerHTML=P.map(function(p,i){return '<div class="r'+(i===P.length-1?' profit':'')+'"><span>'+p[0]+'</span><span class="bar" style="width:'+Math.round(p[1]/pm*100)+'%"></span><span class="v">'+p[1]+'</span></div>';}).join('');
+
+/* ---------- appendix A: calculator ---------- */
+var F=[['p','Cena zestawu brutto',49,149,1,79,' zł'],['c','Koszt sztuki (COGS)',8,35,0.5,16,' zł'],['fee','Prowizja TikTok',0,12,0.5,9,'%'],
+       ['aff','Prowizja creatora',0,30,1,15,'%'],['ads','Reklama (% ceny)',0,35,1,5,'%'],['ship','Wysyłka netto',5,16,0.01,8.86,' zł'],
+       ['pack','Pakowanie',2,10,0.5,6,' zł'],['ret','Zwroty i uszkodzenia',0,10,0.5,3,'%']];
+document.getElementById('calc').innerHTML=F.map(function(f){return '<label for="in-'+f[0]+'"><span>'+f[1]+' <b id="o-'+f[0]+'"></b></span><input type="range" id="in-'+f[0]+'" min="'+f[2]+'" max="'+f[3]+'" step="'+f[4]+'" value="'+f[5]+'"></label>';}).join('');
+function calc(){
+  var v={};F.forEach(function(f){v[f[0]]=parseFloat(document.getElementById('in-'+f[0]).value);document.getElementById('o-'+f[0]).textContent=(f[6]===' zł'?z2(v[f[0]]):v[f[0]])+f[6];});
+  var net=v.p/1.23, items=[['Cena netto',net,'tot'],['Koszt sztuki',v.c],['Prowizja TikTok',v.p*v.fee/100/1.23],['Creator',v.p*v.aff/100],['Reklama',v.p*v.ads/100],['Wysyłka',v.ship],['Pakowanie',v.pack],['Zwroty',net*v.ret/100]];
+  var left=net,h='',sc=280/net;
+  items.forEach(function(it,i){ if(i===0){h+=row(it[0],0,net,'tot',net);return;} left-=it[1]; h+=row(it[0],left,it[1],'',-it[1]);});
+  var cm=left; h+=row('Zostaje na paczce',0,Math.max(cm,0),'cm'+(cm<0?' neg':''),cm);
+  function row(l,x,w,cls,val){return '<div class="r '+cls+'"><span>'+l+'</span><span class="track"><span class="seg" style="left:'+Math.max(0,x*sc)+'px;width:'+Math.max(2,Math.abs(w)*sc)+'px"></span></span><span class="v">'+(val<0?'−':'')+z2(Math.abs(val))+'</span></div>';}
+  document.getElementById('wf').innerHTML=h;
+  var pre=net-v.c-v.p*v.fee/100/1.23-v.p*v.aff/100-v.ship-v.pack-net*v.ret/100;
+  var be=pre>0?(v.p/pre):null;
+  document.getElementById('big').innerHTML='<div><b style="color:'+(cm<0?'var(--bad)':'var(--accent)')+'">'+z2(cm)+' zł</b>zostaje na paczce</div><div><b>'+Math.round(cm/net*100)+'%</b>ceny netto</div><div><b>'+(be?z2(be):'—')+'</b>ROAS, przy którym reklama wychodzi na zero</div>';
+}
+F.forEach(function(f){document.getElementById('in-'+f[0]).addEventListener('input',calc);});calc();
+document.getElementById('chtab').innerHTML='<tr><th>Zestaw 79 zł, w zł</th><th>TikTok creator</th><th>TikTok reklama/LIVE</th><th>Allegro</th><th>Sklep</th></tr>'+
+ [['Koszt sztuki','cogs'],['Prowizja platformy','fee'],['Creator','aff'],['Reklama','ads'],['Wysyłka','ship'],['Pakowanie','pack'],['Zwroty, płatności','retpay'],['Zostaje','cm']].map(function(r,ri,a){
+   return '<tr'+(ri===a.length-1?' class="sum"':'')+'><td>'+r[0]+'</td>'+M.ue.map(function(u){var x=r[1]==='retpay'?u.ret+u.pay:u[r[1]];return '<td>'+z2(x)+'</td>';}).join('')+'</tr>';}).join('');
+
+/* ---------- appendix B ---------- */
+document.getElementById('bh').innerHTML='Plus od marca, milion w grudniu. Rok kończy się ok. '+k(S.profit)+' tys. zł zysku operacyjnego.'+E;
+var cols=[['Miesiąc',function(r){return r.mon;}],['Zamówienia',function(r){return zl(r.orders);}],['w tym powroty',function(r){return zl(r.rep);}],['Sprzedaż brutto',function(r){return zl(r.gross);}],['Netto',function(r){return zl(r.net);}],
+ ['Produkt',function(r){return zl(r.cogs);}],['Platformy',function(r){return zl(r.fee);}],['Creatorzy',function(r){return zl(r.aff);}],['Reklama+próbki',function(r){return zl(r.ads+r.seed);}],['Logistyka',function(r){return zl(r.ship+r.pack);}],['Zwroty',function(r){return zl(r.ret+r.pay);}],['Stałe',function(r){return zl(r.fixed);}],['Zysk',function(r){return zl(r.profit);}],['Narastająco',function(r){return zl(r.cumgross);}]];
+var mt='<tr>'+cols.map(function(c){return '<th>'+c[0]+'</th>';}).join('')+'</tr>';
+R.forEach(function(r){mt+='<tr>'+cols.map(function(c,i){var t=c[1](r);return '<td'+(i===12&&r.profit<0?' class="neg"':'')+'>'+t+'</td>';}).join('')+'</tr>';});
+mt+='<tr class="sum"><td>Razem</td><td>'+zl(S.orders)+'</td><td>'+zl(S.rep)+'</td><td>'+zl(S.gross)+'</td><td>'+zl(S.net)+'</td><td>'+zl(S.cogs)+'</td><td>'+zl(S.fee)+'</td><td>'+zl(S.aff)+'</td><td>'+zl(S.ads+S.seed)+'</td><td>'+zl(S.ship+S.pack)+'</td><td>'+zl(S.ret+S.pay)+'</td><td>'+zl(S.fixed)+'</td><td>'+zl(S.profit)+'</td><td></td></tr>';
+document.getElementById('mtab').innerHTML=mt;
+document.getElementById('bnote').innerHTML='Kwoty w zł. Netto = sprzedaż bez VAT 23%. Koszty jednorazowe przed startem ('+zl(M.one_off)+' zł: projekt marki, zgodność CLP, znak towarowy, zdjęcia, partia testowa, regulamin) odejmujemy osobno, stąd '+zl(S.profit)+' − '+zl(M.one_off)+' = '+zl(S.profit_after_oneoff)+' zł. Mix kanałów: 60% creatorzy na starcie, od lipca 50% creatorzy, 22% reklama i LIVE, 18% Allegro, 10% sklep. Powroty: 5% klientów miesięcznie, 3–8 miesięcy po zakupie, kupuje uzupełnienie za 69 zł. Wszystko SZACUNEK.';
+
+/* ---------- appendix C ---------- */
+var fr=[0,2,5,8,11];
+document.getElementById('ftab').innerHTML='<tr><th>Miesiąc</th><th>Sprzedaż TikTok</th><th>Wyświetlenia</th><th>Filmy</th><th>Aktywni creatorzy</th><th>Zamówienia dziennie</th></tr>'+
+ fr.map(function(i){var r=R[i];return '<tr><td>'+(i+1)+'. ('+r.mon+')</td><td>'+k(r.tt_gmv)+' tys. zł</td><td>'+(r.views/1e6).toFixed(1).replace('.',',')+' mln</td><td>'+Math.round(r.videos)+'</td><td>'+Math.round(r.videos/3)+'</td><td>'+Math.round(r.orders/30)+'</td></tr>';}).join('');
+
+/* ---------- appendix D ---------- */
+var T=M.trail, low=Math.min.apply(null,T), li=T.indexOf(low);
+document.getElementById('dh').innerHTML='Potrzebujecie ok. '+k(-low)+' tys. zł gotówki, zanim biznes zacznie sam się finansować.'+E;
+var w=560,hgt=300,x0=60,yz=60,sy=200/100000,cc='';
+[0,-25000,-50000,-75000,-100000].forEach(function(g){var y=yz-g*sy;cc+='<line x1="'+x0+'" y1="'+y+'" x2="540" y2="'+y+'" style="stroke:var(--nightGrid)"/><text x="'+(x0-8)+'" y="'+(y+4)+'" text-anchor="end">'+(g?'−'+(-g/1000)+'k':'0')+'</text>';});
+var pts=T.map(function(v,i){return (x0+10+i*37)+','+(yz-v*sy);}).join(' ');
+cc+='<polyline points="'+pts+'" style="fill:none;stroke:var(--mint);stroke-width:3"/>';
+T.forEach(function(v,i){var x=x0+10+i*37,y=yz-v*sy;cc+='<circle cx="'+x+'" cy="'+y+'" r="'+(i===li?6:3.5)+'" style="fill:'+(i===li?'var(--stain)':'var(--mint)')+'"/>';
+  cc+='<text x="'+x+'" y="'+(hgt-14)+'" text-anchor="middle">'+(i===0?'start':i)+'</text>';});
+cc+='<text x="'+(x0+10+li*37)+'" y="'+(yz-low*sy+24)+'" text-anchor="middle" style="fill:var(--stain);font-size:13px">'+k(low)+' tys. zł</text>';
+document.getElementById('cash').innerHTML=cc;
+document.getElementById('cnote').innerHTML='Stan konta narastająco, w zł. Start: koszty jednorazowe i pierwszy zapas. Towar kupujemy 1,5 miesiąca do przodu, platformy wypłacają ok. 40% sprzedaży z miesięcznym opóźnieniem. Najgłębiej jest przed Wielkanocą, bo wtedy kupujemy towar na szczyt. W wariancie 20 tys. zł trzeba zacząć od testu z Dodatku C i finansować wzrost z zysku albo kredytem kupieckim u producenta.';
+document.getElementById('lev').textContent='prowizja 5% dla artykułów domowych (niepotwierdzona w PL) dałaby +'+k(M.levers.fee5)+' tys. zł rocznie, prowizja dla creatorów 12% zamiast 15% +'+k(M.levers.aff12)+' tys. zł, a każde 10% zamówień przesunięte na zestaw 149 zł podnosi średni koszyk o ok. 7 zł.';
+
+
+/* ---------- quiz ---------- */
+var QP=[
+["Ile kosztuje zestaw Glanc?",["79 zł","49 zł","99 zł","149 zł"],0,"Zestaw do płyty kosztuje 79 zł. Zestaw Kuchnia z pastą uniwersalną: 149 zł."],
+["Co zawiera zestaw Glanc?",["Skrobak z 5 ostrzami, pasta do szkła 250 ml, Tarcza 50 ml, mikrofibra","Tylko pasta i gąbka","Spray 500 ml i rękawice","Pasta 850 g i szczotka"],0,"Skrobak + 5 ostrzy, pasta do szkła 250 ml, Tarcza 50 ml i mikrofibra."],
+["Ile czasu trwa kolejne mycie po nałożeniu Tarczy?",["Ok. 10 sekund","Ok. 1 minuta","Ok. 5 minut","Pół godziny"],0,"Tarcza zostawia warstwę, z której brud schodzi jednym przetarciem w ok. 10 s."],
+["Ile pełna prezentacja zakłada ceny za pastę The Pink Stuff 850 g (promocja, PL)?",["14,99 zł","29,99 zł","49 zł","9 zł"],0,"Pasta to towar za ok. 15 zł. Dlatego sprzedajemy gotowe rozwiązanie, nie słoik."],
+["Ile kosztowałoby skompletowanie podobnych rzeczy osobno?",["Ok. 40–45 zł","Ok. 10 zł","Ok. 120 zł","Ok. 200 zł"],0,"Ok. 40–45 zł. Dopłata ok. 35 zł za wygodę i markę musi się obronić w teście."],
+["Od kiedy działa TikTok Shop w Polsce?",["15.06.2026","01.01.2025","15.06.2027","01.03.2026"],0,"Start TikTok Shop w Polsce: 15.06.2026."],
+["Jaki jest planowany start sprzedaży Glanc?",["Styczeń 2027","Czerwiec 2026","Wrzesień 2027","Grudzień 2026"],0,"Plan zakłada start w styczniu 2027."],
+["W którym miesiącu scenariusz bazowy dochodzi do miliona zł sprzedaży łącznie?",["W 12. miesiącu","W 6. miesiącu","W 3. miesiącu","W 24. miesiącu"],0,"Scenariusz bazowy: milion po 12 miesiącach (pesymistyczny 18, optymistyczny 10). SZACUNEK."],
+["Ile zostaje na czysto z miliona w scenariuszu bazowym?",["Ok. 68 tys. zł","Ok. 500 tys. zł","Ok. 250 tys. zł","Ok. 10 tys. zł"],0,"Ok. 68 tys. zł po kosztach startu, przed podatkiem dochodowym, bez pensji założycieli. SZACUNEK."],
+["Jak nazywa się produkt z żółtą butelką 50 ml w zestawie?",["Tarcza","Blask","Pancerz","Lustro"],0,"Tarcza to powłoka ochronna, dzięki której kolejne mycie trwa 10 s."],
+["Które nazwy były rozważane obok Glanc?",["Szoruj i Lśni","Blask i Błysk","Czysto i Gładko","Lux i Polish"],0,"Szoruj kojarzy się z harówką, a Lśni jest nijakie."],
+["Jaki dźwięk ma być słychać w 2. sekundzie reklamy?",["Skrobak zdejmujący przypalony nalot","Syrena","Odgłos spryskiwacza","Muzyka klasyczna"],0,"1,0–2,0 s: skrobak zdejmuje nalot jednym pasem. Słychać ten dźwięk."],
+["Jaki napis pojawia się na hooku reklamy w 0–1 s?",["Ta płyta miała iść na śmietnik.","Kup teraz!","Tylko 79 zł","Nowość roku"],0,"Hook: przypalona płyta z góry i napis „Ta płyta miała iść na śmietnik.”"],
+["Ile średnio zostaje na jednej paczce sprzedanej przez creatora?",["Ok. 10 zł","Ok. 40 zł","Ok. 60 zł","Nic, jest strata"],0,"9,86 zł, czyli ok. 15% ceny netto. SZACUNEK."],
+["Jaka jest prowizja TikTok od ceny brutto w modelu?",["9%","2%","25%","0%"],0,"Prowizja TikTok: 9% od ceny brutto (oficjalnie)."],
+["Jaki stop-warunek ma test po 4 tygodniach?",["Żaden film nie przekroczył 50 tys. wyświetleń lub GPM poniżej 15 zł","Brak komentarzy","Mniej niż 10 zamówień","Spadek obserwujących"],0,"Test: 6 tygodni, ok. 9 tys. zł, 200 zestawów, 100 próbek dla creatorów."],
+["Ile zestawów robimy w teście przed produkcją?",["200","20","2000","3000"],0,"200 zestawów z gotowych elementów. MOQ własnej pasty to ok. 3 tys. szt."],
+["Ile gotówki potrzeba, zanim biznes zacznie sam się finansować?",["Ok. 80 tys. zł","Ok. 5 tys. zł","Ok. 300 tys. zł","Nic"],0,"Najgłębiej jest przed Wielkanocą, bo kupujemy towar na szczyt. SZACUNEK."],
+["Jakie ryzyko prawne trzeba sprawdzić przed startem?",["Znak Glanc w UPRP i EUIPO","Patent na skrobak","Licencję na reklamę","Pozwolenie na wysyłkę"],0,"Działa już firma AM-GLANC, a w drogeriach jest GlanzMeister."],
+["Dlaczego plan to tuba zamiast butelki na pastę?",["Wyciek płynu w paczce oznacza zwrot","Jest ładniejsza","Jest tańsza w transporcie powietrznym","Wymaga tego Allegro"],0,"Płyny w paczce to ryzyko. Tuba, folia termokurczliwa i karton z przegrodą."],
+["Który kanał daje największą marżę na paczce (tabela w Dodatku A)?",["Allegro (ok. 19,80 zł)","Sklep własny","TikTok creator","TikTok LIVE"],0,"Allegro: ok. 19,80 zł na paczce. TikTok creator i reklama/LIVE: 9,86 zł, sklep: 9,16 zł."]
+];
+function shuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+var qbox=document.getElementById('qz'),qs=[],qi=0,qsc=0;
+function qStart(){qs=shuf(QP).slice(0,5).map(function(q){var o=q[1].map(function(t,k){return {t:t,c:k===q[2]};});return {q:q[0],o:shuf(o),e:q[3]};});qi=0;qsc=0;qShow();}
+function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function qShow(){
+  var q=qs[qi];
+  qbox.innerHTML='<div class="top"><span>Pytanie '+(qi+1)+' / 5</span><span>Wynik: '+qsc+'</span></div><div class="bar"><i style="width:'+(qi/5*100)+'%"></i></div>'+
+   '<div class="q">'+esc(q.q)+'</div><div class="opts">'+q.o.map(function(o,k){return '<button type="button" class="opt" data-k="'+k+'">'+esc(o.t)+'</button>';}).join('')+'</div>'+
+   '<div class="fb" id="qfb" aria-live="polite"></div><div class="act" id="qact"></div>';
+  [].forEach.call(qbox.querySelectorAll('.opt'),function(b){b.onclick=function(){qAns(+b.getAttribute('data-k'));};});
+}
+function qAns(k){
+  var q=qs[qi],ok=q.o[k].c;if(ok)qsc++;
+  [].forEach.call(qbox.querySelectorAll('.opt'),function(b,j){b.disabled=true;if(q.o[j].c)b.classList.add('ok');else if(j===k)b.classList.add('no');});
+  document.getElementById('qfb').innerHTML='<b>'+(ok?'Dobrze. ':'Nie tym razem. ')+'</b>'+esc(q.e);
+  var last=qi===4;document.getElementById('qact').innerHTML='<button type="button" class="btn" id="qnext">'+(last?'Zobacz wynik':'Dalej')+'</button>';
+  document.getElementById('qnext').onclick=function(){if(last)qEnd();else{qi++;qShow();}};
+  document.getElementById('qnext').focus();
+}
+function qEnd(){
+  var v=qsc===5?'Na glanc. Znasz ten produkt lepiej niż założyciele.':qsc>=3?'Całkiem nieźle. Jeszcze rzut oka na dodatki A i C.':'Powtórka z prezentacji się przyda. Zacznij od slajdu 2 i Dodatku A.';
+  qbox.innerHTML='<div class="top"><span>Koniec</span><span></span></div><div class="bar"><i style="width:100%"></i></div><div class="score">'+qsc+' / 5</div><div class="verdict">'+v+'</div><div class="act"><button type="button" class="btn" id="qagain">Jeszcze raz (nowe pytania)</button><button type="button" class="btn alt" id="qback">Wróć do prezentacji</button></div>';
+  document.getElementById('qagain').onclick=qStart;document.getElementById('qback').onclick=function(){go(0)};
+}
+var qInit=false;window.glancQuiz=function(){if(!qInit){qInit=true;qStart();}};
+
+/* ---------- nav ---------- */
+var st=document.getElementById('stage'),slides=[].slice.call(st.querySelectorAll('.slide')),i=0,vp=document.getElementById('vp'),prev=document.getElementById('prev'),next=document.getElementById('next'),count=document.getElementById('count');
+function fit(){var s=Math.min(vp.clientWidth/1280,vp.clientHeight/720);st.style.transform='translate(-50%,-50%) scale('+s+')';}
+function go(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach(function(el,j){el.classList.toggle('on',j===i);});count.textContent=(i<5?(i+1)+' / 5':(i===slides.length-1?'Quiz':'Dodatek '+'ABCD'[i-5]));if(i===slides.length-1&&window.glancQuiz)window.glancQuiz();prev.disabled=i===0;next.disabled=i===slides.length-1;}
+prev.onclick=function(){go(i-1)};next.onclick=function(){go(i+1)};
+document.addEventListener('keydown',function(e){if(e.target&&e.target.type==='range')return;if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();go(i+1);}if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(i-1);}if(e.key==='Home')go(0);if(e.key==='End')go(slides.length-1);});
+var x0t=null;vp.addEventListener('touchstart',function(e){x0t=e.touches[0].clientX},{passive:true});
+vp.addEventListener('touchend',function(e){if(x0t===null||(e.target&&e.target.type==='range'))return;var dx=e.changedTouches[0].clientX-x0t;if(Math.abs(dx)>40)go(i+(dx<0?1:-1));x0t=null;});
+document.getElementById('quizbtn').onclick=function(){go(slides.length-1)};
+window.addEventListener('resize',fit);fit();go(0);
+})();
+</script>
+</body></html>
